@@ -28,10 +28,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSystemJobs } from "@/apis/hooks";
 import Jobs = System.Jobs;
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { startCase } from "lodash";
 import { debounce } from "lodash";
 import { QueryKeys } from "@/apis/queries/keys";
 import api from "@/apis/raw";
+import { startCase } from "@/utilities";
 import classes from "./NotificationDrawer.module.css";
 
 interface NotificationDrawerProps {

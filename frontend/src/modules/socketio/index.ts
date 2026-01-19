@@ -1,6 +1,6 @@
 import { onlineManager } from "@tanstack/react-query";
-import { debounce, forIn, remove, uniq } from "lodash";
 import { io, Socket } from "socket.io-client";
+import { debounce, forIn, remove, uniq } from "@/utilities";
 import { Environment, isDevEnv, isTestEnv } from "@/utilities";
 import { ENSURE, GROUP, LOG } from "@/utilities/console";
 import { createDefaultReducer } from "./reducer";
@@ -128,7 +128,7 @@ class SocketIOClient {
           }
 
           forIn(element, (ids, key) => {
-            ids = uniq(ids);
+            ids = uniq(ids as unknown[]);
             const action = handler[key as SocketIO.ActionType];
             if (action) {
               // FIXME: type

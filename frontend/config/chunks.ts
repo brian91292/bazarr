@@ -27,7 +27,7 @@ const charts = [
   "d3-time",
 ];
 
-const utils = ["axios", "socket.io-client", "lodash", "clsx"];
+const utils = ["axios", "socket.io-client", "clsx"];
 
 function renderChunks() {
   const chunks: Record<string, string[]> = {};

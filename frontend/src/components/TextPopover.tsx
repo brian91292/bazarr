@@ -1,6 +1,6 @@
 import { FunctionComponent, ReactElement } from "react";
 import { Tooltip, TooltipProps } from "@mantine/core";
-import { isNull, isUndefined } from "lodash";
+import { isNull, isUndefined } from "@/utilities";
 
 interface TextPopoverProps {
   children: ReactElement;

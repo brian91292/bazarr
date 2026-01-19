@@ -1,9 +1,9 @@
 import { cleanNotifications, showNotification } from "@mantine/notifications";
-import { isArray, isEmpty, isNumber } from "lodash";
 import queryClient from "@/apis/queries";
 import { QueryKeys } from "@/apis/queries/keys";
 import api from "@/apis/raw";
 import { notification } from "@/modules/task";
+import { isArray, isEmpty, isNumber } from "@/utilities";
 import { LOG } from "@/utilities/console";
 import { setCriticalError, setOnlineStatus } from "@/utilities/event";
 

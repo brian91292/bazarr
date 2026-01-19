@@ -17,13 +17,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ColumnDef } from "@tanstack/react-table";
-import { isString, uniqBy } from "lodash";
 import { useMovieSubtitleModification } from "@/apis/hooks";
 import { subtitlesTypeOptions } from "@/components/forms/uploadFormSelectorTypes";
 import { Action, Selector } from "@/components/inputs";
 import SimpleTable from "@/components/tables/SimpleTable";
 import TextPopover from "@/components/TextPopover";
 import { useModals, withModal } from "@/modules/modals";
+import { isString, uniqBy } from "@/utilities";
 import { useArrayAction, useSelectorOptions } from "@/utilities";
 import FormUtils from "@/utilities/form";
 import {

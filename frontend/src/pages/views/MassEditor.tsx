@@ -4,10 +4,10 @@ import { Box, Container, useCombobox } from "@mantine/core";
 import { faCheck, faUndo } from "@fortawesome/free-solid-svg-icons";
 import { UseMutationResult } from "@tanstack/react-query";
 import { ColumnDef, Table } from "@tanstack/react-table";
-import { uniqBy } from "lodash";
 import { useIsAnyMutationRunning, useLanguageProfiles } from "@/apis/hooks";
 import { GroupedSelector, GroupedSelectorOptions, Toolbox } from "@/components";
 import SimpleTable from "@/components/tables/SimpleTable";
+import { uniqBy } from "@/utilities";
 import { GetItemId, useSelectorOptions } from "@/utilities";
 
 interface MassEditorProps<T extends Item.Base = Item.Base> {

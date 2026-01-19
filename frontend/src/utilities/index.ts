@@ -1,5 +1,5 @@
 import { Dispatch } from "react";
-import { difference, differenceWith } from "lodash";
+import { difference, differenceWith } from "./array";
 import { isEpisode, isMovie, isSeries } from "./validate";
 
 export function toggleState(
@@ -70,3 +70,7 @@ export function toPython(value: boolean): PythonBoolean {
 export * from "./env";
 export * from "./hooks";
 export * from "./validate";
+export * from "./array";
+export * from "./object";
+export * from "./string";
+export * from "./function";

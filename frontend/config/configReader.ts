@@ -2,8 +2,8 @@
 /// <reference types="node" />
 
 import { readFileSync } from "fs";
-import { get } from "lodash";
 import { parse } from "yaml";
+import { get } from "@/utilities/object";
 
 class ConfigReader {
   config: object;

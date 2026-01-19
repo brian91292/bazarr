@@ -9,7 +9,6 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useMutation } from "@tanstack/react-query";
-import { isObject } from "lodash";
 import api from "@/apis/raw";
 import { Selector } from "@/components";
 import MutateButton from "@/components/async/MutateButton";
@@ -20,6 +19,7 @@ import {
   useSettingValue,
   useUpdateArray,
 } from "@/pages/Settings/utilities/hooks";
+import { isObject } from "@/utilities";
 import { BuildKey, useSelectorOptions } from "@/utilities";
 import FormUtils from "@/utilities/form";
 

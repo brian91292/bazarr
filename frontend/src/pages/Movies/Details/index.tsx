@@ -16,7 +16,6 @@ import {
   faWrench,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { isNumber } from "lodash";
 import {
   useDownloadMovieSubtitles,
   useIsMovieActionRunning,
@@ -38,6 +37,7 @@ import { useModals } from "@/modules/modals";
 import { notification, task, TaskGroup } from "@/modules/task";
 import ItemOverview from "@/pages/views/ItemOverview";
 import { RouterNames } from "@/Router/RouterNames";
+import { isNumber } from "@/utilities";
 import { useLanguageProfileBy } from "@/utilities/languages";
 import Table from "./table";
 

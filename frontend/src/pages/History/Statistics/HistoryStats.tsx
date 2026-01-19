@@ -1,7 +1,6 @@
 import { FunctionComponent, useMemo, useState } from "react";
 import { Box, Container, SimpleGrid, useMantineTheme } from "@mantine/core";
 import { useDocumentTitle } from "@mantine/hooks";
-import { merge } from "lodash";
 import {
   Bar,
   BarChart,
@@ -20,6 +19,7 @@ import {
 import { useInstanceName } from "@/apis/hooks/site";
 import { Selector, Toolbox } from "@/components";
 import { QueryOverlay } from "@/components/async";
+import { merge } from "@/utilities";
 import { useSelectorOptions } from "@/utilities";
 import { actionOptions, timeFrameOptions } from "./options";
 import styles from "./HistoryStats.module.scss";

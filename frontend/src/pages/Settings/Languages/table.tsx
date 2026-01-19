@@ -2,7 +2,6 @@ import { FunctionComponent, useCallback, useMemo } from "react";
 import { Badge, Button, Group } from "@mantine/core";
 import { faTrash, faWrench } from "@fortawesome/free-solid-svg-icons";
 import { ColumnDef } from "@tanstack/react-table";
-import { cloneDeep, includes, maxBy } from "lodash";
 import { Action } from "@/components";
 import {
   anyCutoff,
@@ -12,6 +11,7 @@ import SimpleTable from "@/components/tables/SimpleTable";
 import { useModals } from "@/modules/modals";
 import { languageProfileKey } from "@/pages/Settings/keys";
 import { useFormActions } from "@/pages/Settings/utilities/FormValues";
+import { cloneDeep, includes, maxBy } from "@/utilities";
 import { BuildKey, useArrayAction } from "@/utilities";
 import { useLatestEnabledLanguages, useLatestProfiles } from ".";
 

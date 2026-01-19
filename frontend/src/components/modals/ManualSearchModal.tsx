@@ -19,12 +19,12 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { UseQueryResult } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
-import { isString } from "lodash";
 import { Action } from "@/components";
 import Language from "@/components/bazarr/Language";
 import StateIcon from "@/components/StateIcon";
 import PageTable from "@/components/tables/PageTable";
 import { withModal } from "@/modules/modals";
+import { isString } from "@/utilities";
 import { GetItemId } from "@/utilities";
 
 type SupportType = Item.Movie | Item.Episode;

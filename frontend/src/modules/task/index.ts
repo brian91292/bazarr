@@ -1,4 +1,4 @@
-import { uniqueId } from "lodash";
+import { uniqueId } from "@/utilities";
 import { LOG } from "@/utilities/console";
 
 class TaskDispatcher {
