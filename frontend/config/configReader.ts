@@ -15,9 +15,20 @@ class ConfigReader {
   open(path: string) {
     try {
       const rawConfig = readFileSync(path, "utf8");
+
       this.config = parse(rawConfig);
+
+      if (this.config === null || typeof this.config !== "object") {
+        this.config = {};
+      }
     } catch (err) {
-      // We don't want to catch the error here, handle it on getValue method
+      this.config = {};
+
+      if (err instanceof Error && "code" in err && err.code !== "ENOENT") {
+        console.error(
+          `Failed to read or parse config file at ${path}: ${err.message}`,
+        );
+      }
     }
   }
 
@@ -25,11 +36,11 @@ class ConfigReader {
     const path = `${sectionName}.${fieldName}`;
     const result = get(this.config, path);
 
-    if (result === undefined) {
+    if (result === undefined || result === null) {
       throw new Error(`Failed to find ${path} in the local config file`);
     }
 
-    return result;
+    return String(result);
   }
 }
 
@@ -52,8 +63,10 @@ export default function overrideEnv(env: Record<string, string>) {
       env["VITE_API_KEY"] = apiKey;
       process.env["VITE_API_KEY"] = apiKey;
     } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+
       throw new Error(
-        `No API key found, please run the backend first, (error: ${err.message})`,
+        `No API key found, please run the backend first, (error: ${message})`,
       );
     }
   }
@@ -70,8 +83,10 @@ export default function overrideEnv(env: Record<string, string>) {
       env["VITE_PROXY_URL"] = url;
       process.env["VITE_PROXY_URL"] = url;
     } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+
       throw new Error(
-        `No proxy url found, please run the backend first, (error: ${err.message})`,
+        `No proxy url found, please run the backend first, (error: ${message})`,
       );
     }
   }
