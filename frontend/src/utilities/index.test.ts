@@ -1,15 +1,15 @@
+import { vi } from "vitest";
 import {
   BuildKey,
   filterSubtitleBy,
   fromPython,
   GetItemId,
   pathJoin,
-  toPython,
-  toggleState,
   Reload,
   ScrollToTop,
+  toggleState,
+  toPython,
 } from "./index";
-import { vi } from "vitest";
 
 describe("index utilities", () => {
   describe("Reload", () => {
@@ -75,10 +75,22 @@ describe("index utilities", () => {
   });
 
   describe("filterSubtitleBy", () => {
-    const subtitles: any[] = [
-      { code2: "en", path: "/path/to/en" },
-      { code2: "fr", path: null },
-      { code2: "es", path: "/path/to/es" },
+    const subtitles: Subtitle[] = [
+      {
+        code2: "en",
+        path: "/path/to/en",
+        name: "English",
+        forced: false,
+        hi: false,
+      },
+      { code2: "fr", path: null, name: "French", forced: false, hi: false },
+      {
+        code2: "es",
+        path: "/path/to/es",
+        name: "Spanish",
+        forced: false,
+        hi: false,
+      },
     ];
 
     it("should return subtitles with path if no languages specified", () => {
@@ -89,8 +101,8 @@ describe("index utilities", () => {
 
     it("should return items matching specified languages", () => {
       const result = filterSubtitleBy(subtitles, [
-        { code2: "fr" },
-        { code2: undefined },
+        { code2: "fr", name: "French" },
+        { code2: "en", name: "English" },
       ]);
       expect(result).toHaveLength(3);
     });
