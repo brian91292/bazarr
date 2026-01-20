@@ -1,11 +1,21 @@
-export const isDevEnv = import.meta.env.MODE === "development";
-export const isProdEnv = import.meta.env.MODE === "production";
-export const isTestEnv = import.meta.env.MODE === "test";
+const getImportMetaEnv = () => {
+  try {
+    return import.meta.env;
+  } catch {
+    return {} as any;
+  }
+};
+
+const env = getImportMetaEnv();
+
+export const isDevEnv = env.MODE === "development";
+export const isProdEnv = env.MODE === "production";
+export const isTestEnv = env.MODE === "test" || process.env.NODE_ENV === "test";
 
 export const Environment = {
   get apiKey(): string | undefined {
     if (isDevEnv) {
-      return import.meta.env.VITE_API_KEY;
+      return env.VITE_API_KEY;
     } else if (isTestEnv) {
       return undefined;
     } else {
@@ -14,7 +24,7 @@ export const Environment = {
   },
   get canUpdate(): boolean {
     if (isDevEnv) {
-      return import.meta.env.VITE_CAN_UPDATE === "true";
+      return env.VITE_CAN_UPDATE === "true";
     } else if (isTestEnv) {
       return false;
     } else {
@@ -23,7 +33,7 @@ export const Environment = {
   },
   get hasUpdate(): boolean {
     if (isDevEnv) {
-      return import.meta.env.VITE_HAS_UPDATE === "true";
+      return env.VITE_HAS_UPDATE === "true";
     } else if (isTestEnv) {
       return false;
     } else {
@@ -43,7 +53,7 @@ export const Environment = {
   },
   get queryDev(): boolean {
     if (isDevEnv) {
-      return import.meta.env.VITE_QUERY_DEV === "true";
+      return env.VITE_QUERY_DEV === "true";
     }
     return false;
   },

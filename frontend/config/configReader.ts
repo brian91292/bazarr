@@ -1,9 +1,10 @@
 /* eslint-disable no-console */
+/* eslint-disable no-restricted-imports */
 /// <reference types="node" />
 
 import { readFileSync } from "fs";
 import { parse } from "yaml";
-import { get } from "@/utilities/object";
+import { get } from "../src/utilities/object";
 
 class ConfigReader {
   config: object;

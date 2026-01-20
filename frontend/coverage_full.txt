@@ -1,0 +1,401 @@
+
+> bazarr@1.0.0 coverage
+> vitest run --coverage
+
+
+ RUN  v3.2.4 /Users/andy/Projects/bazarr/frontend
+      Coverage enabled with v8
+
+ ✓ src/pages/Settings/components/Section.test.tsx (3 tests) 128ms
+ ✓ src/components/inputs/ChipInput.test.tsx (3 tests | 2 skipped) 132ms
+ ✓ src/components/inputs/Action.test.tsx (3 tests) 182ms
+ ✓ src/components/bazarr/Language.test.tsx (7 tests) 145ms
+ ✓ src/pages/System/Status/index.test.tsx (1 test) 215ms
+ ✓ src/pages/Settings/components/forms.test.tsx (2 tests) 194ms
+ ✓ src/pages/Settings/components/Layout.test.tsx (2 tests) 243ms
+ ✓ src/pages/System/Announcements/index.test.tsx (2 tests) 309ms
+ ✓ src/pages/System/Logs/index.test.tsx (1 test) 163ms
+ ✓ src/pages/History/Series/index.test.tsx (1 test) 344ms
+   ✓ History Series > should render with series  342ms
+ ✓ src/pages/System/Providers/index.test.tsx (2 tests) 347ms
+ ✓ src/pages/System/Tasks/index.test.tsx (2 tests) 335ms
+ ✓ src/pages/Wanted/Movies/index.test.tsx (2 tests) 415ms
+   ✓ Wanted Movies > should render with wanted movies  308ms
+ ✓ src/pages/History/Statistics/HistoryStats.test.tsx (1 test) 300ms
+ ✓ src/pages/Blacklist/Series/index.test.tsx (2 tests) 396ms
+ ✓ src/pages/Blacklist/Movies/index.test.tsx (2 tests) 440ms
+   ✓ Blacklist Movies > should render with blacklisted movies  327ms
+ ✓ src/pages/Wanted/Series/index.test.tsx (2 tests) 496ms
+   ✓ Wanted Series > should render with wanted series  325ms
+ ✓ src/pages/Series/series.test.tsx (2 tests) 468ms
+ ✓ src/components/inputs/Selector.test.tsx (7 tests) 733ms
+ ✓ src/pages/Movies/movies.test.tsx (2 tests) 515ms
+   ✓ Movies editor page > should render  307ms
+ ✓ src/pages/History/Movies/index.test.tsx (5 tests) 858ms
+   ✓ History Movies > should render the movies history table  334ms
+ ✓ src/utilities/index.test.ts (5 tests) 7ms
+ ✓ src/utilities/time.test.ts (4 tests) 7ms
+ ✓ src/App/app.test.tsx (1 test) 186ms
+ ✓ src/pages/Settings/settings.test.tsx (6 tests) 880ms
+   ✓ Settings > general page should render  308ms
+ ✓ src/pages/Authentication.test.tsx (1 test) 122ms
+ ✓ src/pages/errors/errors.test.tsx (3 tests) 112ms
+ ✓ src/pages/System/Backups/index.test.tsx (1 test) 116ms
+ ✓ src/pages/Settings/Languages/equals.test.ts (2 tests) 7ms
+ ↓ src/components/Search.test.tsx (1 test | 1 skipped)
+ ✓ src/pages/System/Releases/index.test.tsx (2 tests) 108ms
+
+ Test Files  30 passed | 1 skipped (31)
+      Tests  77 passed | 3 skipped (80)
+   Start at  10:12:43
+   Duration  6.88s (transform 2.42s, setup 9.41s, collect 58.85s, tests 8.90s, environment 25.44s, prepare 4.22s)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   55.15 |    78.67 |   44.25 |   55.15 |                   
+ ...azarr/frontend |       0 |        0 |       0 |       0 |                   
+  ...ss.config.cjs |       0 |        0 |       0 |       0 | 1-14              
+ ...frontend/build |       0 |        0 |       0 |       0 |                   
+  registerSW.js    |       0 |        0 |       0 |       0 | 1                 
+  sw.js            |       0 |        0 |       0 |       0 | 1                 
+  ...x-5ffe50d4.js |       0 |        0 |       0 |       0 | 1                 
+ ...d/build/assets |       0 |    11.11 |   11.11 |       0 |                   
+  ...s-0tFCHryG.js |       0 |        0 |       0 |       0 | 1                 
+  ...s-l0sNRNKZ.js |       0 |        0 |       0 |       0 |                   
+  ...s-BsX9ieDQ.js |       0 |        0 |       0 |       0 | 1-68              
+  ...x-BpYcQfJU.js |       0 |        0 |       0 |       0 | 1-603             
+  ...x-DuClvnOK.js |       0 |        0 |       0 |       0 | 1-5               
+  ...y-DrDhZu16.js |       0 |        0 |       0 |       0 | 1-22              
+  ui-6Rv1Qpdv.js   |       0 |        0 |       0 |       0 | 1-68              
+  ...s--Pc6Jxex.js |       0 |        0 |       0 |       0 | 1-32              
+  ...s-vexcfMwl.js |       0 |        0 |       0 |       0 | 1-29              
+ ...rontend/config |       0 |      100 |     100 |       0 |                   
+  chunks.ts        |       0 |      100 |     100 |       0 | 2-54              
+  configReader.ts  |       0 |      100 |     100 |       0 | 4-93              
+ ...ntend/dev-dist |       0 |        0 |       0 |       0 |                   
+  registerSW.js    |       0 |        0 |       0 |       0 | 1                 
+ ...s/workbox-core |   92.59 |        0 |       0 |   92.59 |                   
+  _version.js      |       0 |        0 |       0 |       0 | 1-6               
+  clientsClaim.js  |     100 |      100 |     100 |     100 |                   
+  copyResponse.js  |     100 |      100 |     100 |     100 |                   
+ ...-core/_private |     100 |      100 |     100 |     100 |                   
+  Deferred.js      |     100 |      100 |     100 |     100 |                   
+  WorkboxError.js  |     100 |      100 |     100 |     100 |                   
+  assert.js        |     100 |      100 |     100 |     100 |                   
+  ...noreParams.js |     100 |      100 |     100 |     100 |                   
+  cacheNames.js    |     100 |      100 |     100 |     100 |                   
+  ...BodyStream.js |     100 |      100 |     100 |     100 |                   
+  ...rCallbacks.js |     100 |      100 |     100 |     100 |                   
+  ...riendlyURL.js |     100 |      100 |     100 |     100 |                   
+  logger.js        |     100 |      100 |     100 |     100 |                   
+  timeout.js       |     100 |      100 |     100 |     100 |                   
+  waitUntil.js     |     100 |      100 |     100 |     100 |                   
+ ...ox-core/models |     100 |      100 |     100 |     100 |                   
+  ...rCallbacks.js |     100 |      100 |     100 |     100 |                   
+ ...odels/messages |     100 |      100 |     100 |     100 |                   
+  ...eGenerator.js |     100 |      100 |     100 |     100 |                   
+  messages.js      |     100 |      100 |     100 |     100 |                   
+ ...box-precaching |     100 |      100 |     100 |     100 |                   
+  ...Controller.js |     100 |      100 |     100 |     100 |                   
+  PrecacheRoute.js |     100 |      100 |     100 |     100 |                   
+  ...heStrategy.js |     100 |      100 |     100 |     100 |                   
+  _version.js      |     100 |      100 |     100 |     100 |                   
+  addRoute.js      |     100 |      100 |     100 |     100 |                   
+  ...atedCaches.js |     100 |      100 |     100 |     100 |                   
+  ...BoundToURL.js |     100 |      100 |     100 |     100 |                   
+  precache.js      |     100 |      100 |     100 |     100 |                   
+  ...heAndRoute.js |     100 |      100 |     100 |     100 |                   
+ ...ecaching/utils |     100 |      100 |     100 |     100 |                   
+  ...eKeyPlugin.js |     100 |      100 |     100 |     100 |                   
+  ...portPlugin.js |     100 |      100 |     100 |     100 |                   
+  ...teCacheKey.js |     100 |      100 |     100 |     100 |                   
+  ...atedCaches.js |     100 |      100 |     100 |     100 |                   
+  ...Variations.js |     100 |      100 |     100 |     100 |                   
+  ...Controller.js |     100 |      100 |     100 |     100 |                   
+  ...nupDetails.js |     100 |      100 |     100 |     100 |                   
+  ...allDetails.js |     100 |      100 |     100 |     100 |                   
+  ...archParams.js |     100 |      100 |     100 |     100 |                   
+ ...orkbox-routing |     100 |      100 |     100 |     100 |                   
+  ...ationRoute.js |     100 |      100 |     100 |     100 |                   
+  RegExpRoute.js   |     100 |      100 |     100 |     100 |                   
+  Route.js         |     100 |      100 |     100 |     100 |                   
+  Router.js        |     100 |      100 |     100 |     100 |                   
+  _version.js      |     100 |      100 |     100 |     100 |                   
+  registerRoute.js |     100 |      100 |     100 |     100 |                   
+ ...-routing/utils |     100 |      100 |     100 |     100 |                   
+  constants.js     |     100 |      100 |     100 |     100 |                   
+  ...aultRouter.js |     100 |      100 |     100 |     100 |                   
+  ...izeHandler.js |     100 |      100 |     100 |     100 |                   
+ ...box-strategies |     100 |      100 |     100 |     100 |                   
+  Strategy.js      |     100 |      100 |     100 |     100 |                   
+  ...egyHandler.js |     100 |      100 |     100 |     100 |                   
+  _version.js      |     100 |      100 |     100 |     100 |                   
+ ...r/frontend/src |   54.05 |    66.66 |      50 |   54.05 |                   
+  constants.ts     |     100 |      100 |     100 |     100 |                   
+  dom.tsx          |       0 |        0 |       0 |       0 | 1-19              
+  providers.tsx    |     100 |      100 |     100 |     100 |                   
+ ...ontend/src/App |    46.1 |    55.55 |   27.27 |    46.1 |                   
+  Header.tsx       |     100 |       25 |      20 |     100 | 30-87             
+  Navbar.tsx       |    27.8 |       50 |    12.5 |    27.8 | ...57-230,242-305 
+  ...ionDrawer.tsx |   19.85 |    16.66 |   16.66 |   19.85 | ...00-104,108-350 
+  ThemeLoader.tsx  |     100 |      100 |     100 |     100 |                   
+  ...eProvider.tsx |     100 |      100 |     100 |     100 |                   
+  index.tsx        |    79.1 |       50 |     100 |    79.1 | ...35,40-46,50-51 
+ ...end/src/Router |      17 |      100 |      25 |      17 |                   
+  Redirector.tsx   |   27.27 |      100 |       0 |   27.27 | 7-25              
+  RouterNames.ts   |     100 |      100 |     100 |     100 |                   
+  index.tsx        |   15.26 |      100 |   33.33 |   15.26 | 62-324,329-345    
+ ...src/apis/hooks |   46.63 |    92.85 |   42.85 |   46.63 |                   
+  episodes.ts      |   42.85 |      100 |   46.15 |   42.85 | ...,93-96,109-125 
+  histories.ts     |     100 |       50 |     100 |     100 | 22-23             
+  index.ts         |     100 |      100 |     100 |     100 |                   
+  languages.ts     |     100 |      100 |     100 |     100 |                   
+  movies.ts        |   58.73 |    88.23 |      50 |   58.73 | ...32-135,148-159 
+  plex.ts          |    8.82 |      100 |       0 |    8.82 | ...88-198,201-217 
+  providers.ts     |    22.1 |      100 |   33.33 |    22.1 | ...4,69-96,99-118 
+  series.ts        |   49.36 |    77.77 |   41.66 |   49.36 | ...57,76-84,95-98 
+  site.ts          |   43.75 |      100 |   33.33 |   43.75 | 4-10,13-15        
+  status.ts        |   56.52 |      100 |      50 |   56.52 | 13-18,21-26       
+  subtitles.ts     |    32.6 |      100 |   11.11 |    32.6 | ...50-165,168-183 
+  system.ts        |   70.18 |      100 |   54.54 |   70.18 | ...88-289,297-298 
+ ...c/apis/queries |   94.65 |    85.71 |     100 |   94.65 |                   
+  hooks.ts         |   92.13 |    84.21 |     100 |   92.13 | 85-88,111,113-114 
+  index.ts         |     100 |      100 |     100 |     100 |                   
+  keys.ts          |     100 |      100 |     100 |     100 |                   
+ ...d/src/apis/raw |    52.6 |    97.72 |   36.36 |    52.6 |                   
+  badges.ts        |      75 |      100 |      50 |      75 | 9-11              
+  base.ts          |   27.11 |      100 |   42.85 |   27.11 | ...48,51-57,60-66 
+  client.ts        |   56.09 |    85.71 |      60 |   56.09 | ...62,65-79,84-94 
+  episodes.ts      |   42.85 |      100 |   30.76 |   42.85 | ...76,85-90,93-94 
+  files.ts         |   57.14 |      100 |      20 |   57.14 | ...15,18-19,22-23 
+  history.ts       |     100 |      100 |     100 |     100 |                   
+  index.ts         |     100 |      100 |     100 |     100 |                   
+  movies.ts        |   63.63 |      100 |      40 |   63.63 | ...81,84-85,88-89 
+  plex.ts          |   27.94 |      100 |    7.69 |   27.94 | ...74,77-84,87-91 
+  providers.ts     |   44.18 |      100 |   28.57 |   44.18 | ...29,32-39,42-47 
+  series.ts        |   85.18 |      100 |      60 |   85.18 | 24-25,28-29       
+  subtitles.ts     |   32.43 |      100 |      20 |   32.43 | ...28,31-35,38-39 
+  system.ts        |   67.24 |      100 |   44.82 |   67.24 | ...28-129,132-137 
+  utils.ts         |   19.44 |      100 |       0 |   19.44 | 17-35,38-47       
+ ...src/components |   42.93 |    66.66 |   53.33 |   42.93 |                   
+  ...rBoundary.tsx |      80 |    66.66 |   66.66 |      80 | 15-16,22-23       
+  Search.tsx       |   50.51 |       80 |   42.85 |   50.51 | ...11-112,114-124 
+  StateIcon.tsx    |   88.57 |       60 |     100 |   88.57 | 44-51,94          
+  ...ToolsMenu.tsx |    8.77 |      100 |       0 |    8.77 | 41-111,121-214    
+  TextPopover.tsx  |      90 |       50 |     100 |      90 | 17-18             
+  index.tsx        |     100 |      100 |     100 |     100 |                   
+ ...mponents/async |   49.38 |    66.66 |      50 |   49.38 |                   
+  Lazy.tsx         |   66.66 |      100 |       0 |   66.66 | 5-6               
+  MutateAction.tsx |   55.17 |      100 |     100 |   55.17 | 28-40             
+  MutateButton.tsx |   10.34 |      100 |       0 |   10.34 | 15-43             
+  QueryOverlay.tsx |     100 |       50 |     100 |     100 | 19                
+  index.ts         |     100 |      100 |     100 |     100 |                   
+ ...ponents/bazarr |   62.35 |    55.55 |      50 |   62.35 |                   
+  AudioList.tsx    |   27.77 |      100 |       0 |   27.77 | 12-25             
+  HistoryIcon.tsx  |   65.67 |       20 |     100 |   65.67 | ...55,57-59,82-83 
+  Language.tsx     |     100 |      100 |     100 |     100 |                   
+  ...geProfile.tsx |   28.57 |      100 |       0 |   28.57 | 10-21             
+  ...eSelector.tsx |      25 |      100 |       0 |      25 | 12-32             
+  index.ts         |     100 |      100 |     100 |     100 |                   
+ ...mponents/forms |   22.46 |      100 |       0 |   22.46 |                   
+  ...rToolForm.tsx |   66.38 |      100 |       0 |   66.38 | 12-14,89-131      
+  ...eRateForm.tsx |   18.18 |      100 |       0 |   18.18 | 11-13,21-77       
+  ItemEditForm.tsx |   14.94 |      100 |       0 |   14.94 | 18-103            
+  ...ploadForm.tsx |    9.66 |      100 |       0 |    9.66 | 48-72,81-327      
+  ...eEditForm.tsx |   18.31 |      100 |       0 |   18.31 | 79-401            
+  ...ploadForm.tsx |    6.96 |      100 |       0 |    6.96 | 53-79,88-399      
+  ...titleForm.tsx |    9.93 |      100 |       0 |    9.93 | 21-97,114-196     
+  ...ffsetForm.tsx |   12.96 |      100 |       0 |   12.96 | 13-15,23-123      
+  ...ationForm.tsx |   57.14 |      100 |       0 |   57.14 | 133-242           
+  ...ctorTypes.tsx |     100 |      100 |     100 |     100 |                   
+ ...ponents/inputs |   80.85 |    78.04 |   69.23 |   80.85 |                   
+  Action.tsx       |   93.75 |       50 |     100 |   93.75 | 29                
+  ChipInput.tsx    |     100 |    66.66 |     100 |     100 | 23                
+  DropContent.tsx  |      25 |      100 |       0 |      25 | 13-33             
+  FileBrowser.tsx  |   81.39 |    69.23 |   57.14 |   81.39 | ...,86-87,106-111 
+  Selector.tsx     |   85.92 |    86.95 |     100 |   85.92 | ...65-167,184-194 
+  index.ts         |     100 |      100 |     100 |     100 |                   
+ ...ponents/modals |    9.07 |      100 |       0 |    9.07 |                   
+  HistoryModal.tsx |    8.36 |      100 |       0 |    8.36 | 27-162,174-323    
+  ...archModal.tsx |   10.29 |      100 |       0 |   10.29 | 38-247            
+  ...oolsModal.tsx |    7.82 |      100 |       0 |    7.82 | ...7,60-61,68-225 
+  index.ts         |     100 |      100 |     100 |     100 |                   
+ ...ponents/tables |   73.61 |    90.47 |   53.84 |   73.61 |                   
+  BaseTable.tsx    |     100 |    95.65 |     100 |     100 | 63                
+  GroupTable.tsx   |    8.97 |      100 |       0 |    8.97 | 15-101            
+  PageControl.tsx  |   93.54 |      100 |      50 |   93.54 | 36-37             
+  PageTable.tsx    |   90.24 |       50 |     100 |   90.24 | 37-38,45-46       
+  ...PageTable.tsx |   87.87 |      100 |      50 |   87.87 | 37-42             
+  SimpleTable.tsx  |     100 |     87.5 |     100 |     100 | 61                
+  index.tsx        |     100 |      100 |     100 |     100 |                   
+ ...onents/toolbox |   89.79 |      100 |     100 |   89.79 |                   
+  Button.tsx       |   86.48 |      100 |     100 |   86.48 | 49-53             
+  Toolbox.tsx      |     100 |      100 |     100 |     100 |                   
+ .../src/constants |     100 |      100 |     100 |     100 |                   
+  plex.ts          |     100 |      100 |     100 |     100 |                   
+ ...d/src/contexts |   73.68 |       60 |      75 |   73.68 |                   
+  Loading.ts       |     100 |      100 |     100 |     100 |                   
+  Navbar.ts        |   81.81 |       50 |     100 |   81.81 | 12-13             
+  Online.ts        |   55.55 |       50 |      50 |   55.55 | 12-13,19-26       
+  index.ts         |     100 |      100 |     100 |     100 |                   
+ ...modules/modals |   74.69 |      100 |      75 |   74.69 |                   
+  ...sProvider.tsx |     100 |      100 |     100 |     100 |                   
+  WithModal.tsx    |      70 |      100 |      50 |      70 | 23-30             
+  hooks.ts         |   59.45 |      100 |     100 |   59.45 | 13-22,28-29,36-38 
+  index.ts         |     100 |      100 |     100 |     100 |                   
+ ...dules/socketio |   12.55 |       50 |   18.75 |   12.55 |                   
+  hooks.ts         |       0 |        0 |       0 |       0 | 1-13              
+  index.ts         |   32.39 |       60 |   21.42 |   32.39 | ...59-162,165-168 
+  reducer.ts       |    3.16 |      100 |       0 |    3.16 | 11-311            
+ ...c/modules/task |   25.73 |      100 |   18.18 |   25.73 |                   
+  group.ts         |     100 |      100 |     100 |     100 |                   
+  index.ts         |   26.15 |      100 |      40 |   26.15 | 16-24,27-59,62-82 
+  notification.ts  |   17.18 |      100 |       0 |   17.18 | ...44,46-59,61-68 
+ ...tend/src/pages |   97.95 |      100 |     100 |   97.95 |                   
+  ...ntication.tsx |   97.95 |      100 |     100 |   97.95 | 38                
+ ...acklist/Movies |   92.24 |    81.81 |      75 |   92.24 |                   
+  index.tsx        |     100 |      100 |      50 |     100 |                   
+  table.tsx        |   89.79 |       75 |   83.33 |   89.79 | 48-49,71-72,88-94 
+ ...acklist/Series |   92.64 |    81.81 |      75 |   92.64 |                   
+  index.tsx        |     100 |      100 |      50 |     100 |                   
+  table.tsx        |   90.47 |       75 |   83.33 |   90.47 | ...6,78-79,95-101 
+ ...pages/Episodes |    9.64 |      100 |       0 |    9.64 |                   
+  components.tsx   |    8.75 |      100 |       0 |    8.75 | 16-100            
+  index.tsx        |   10.28 |      100 |       0 |   10.28 | 51-270            
+  table.tsx        |    9.34 |      100 |     100 |    9.34 | 32-250            
+ ...History/Movies |   88.95 |     62.5 |      90 |   88.95 |                   
+  index.tsx        |   88.95 |     62.5 |      90 |   88.95 | ...58-165,169-170 
+ ...History/Series |   83.15 |    61.11 |    90.9 |   83.15 |                   
+  index.tsx        |   83.15 |    61.11 |    90.9 |   83.15 | ...50-153,174-190 
+ ...ory/Statistics |   93.28 |    66.66 |      50 |   93.28 |                   
+  HistoryStats.tsx |   91.17 |    66.66 |      50 |   91.17 | 49-58             
+  options.ts       |     100 |      100 |     100 |     100 |                   
+ ...c/pages/Movies |   57.07 |      100 |      25 |   57.07 |                   
+  Editor.tsx       |   73.33 |      100 |      40 |   73.33 | 33-41,51-56,62-67 
+  index.tsx        |   47.69 |      100 |   14.28 |   47.69 | ...91-108,113-132 
+ ...Movies/Details |   10.78 |      100 |       0 |   10.78 |                   
+  index.tsx        |   11.76 |      100 |       0 |   11.76 | 45-262            
+  table.tsx        |    9.43 |      100 |       0 |    9.43 | 23-29,32-193      
+ ...c/pages/Series |   55.38 |      100 |   27.27 |   55.38 |                   
+  Editor.tsx       |   73.33 |      100 |      40 |   73.33 | 31-39,49-54,60-65 
+  index.tsx        |   44.16 |      100 |   16.66 |   44.16 | ...75-107,112-131 
+ ...pages/Settings |     100 |      100 |     100 |     100 |                   
+  keys.ts          |     100 |      100 |     100 |     100 |                   
+  options.ts       |     100 |      100 |     100 |     100 |                   
+ ...ttings/General |   88.77 |       60 |   33.33 |   88.77 |                   
+  ...kSelector.tsx |   80.76 |      100 |      50 |   80.76 | 18-32             
+  index.tsx        |   90.05 |       50 |   28.57 |   90.05 | ...00-111,120-121 
+  options.ts       |     100 |      100 |     100 |     100 |                   
+ ...ings/Languages |   53.11 |       72 |   36.66 |   53.11 |                   
+  components.tsx   |   54.54 |      100 |   33.33 |   54.54 | 36-39,48-66       
+  equals.tsx       |   44.74 |    73.33 |   42.85 |   44.74 | ...15-331,336-344 
+  index.tsx        |   95.23 |       60 |      50 |   95.23 | ...97,110,154-156 
+  table.tsx        |    35.9 |       75 |   14.28 |    35.9 | ...18-233,247-264 
+ .../Notifications |   14.21 |      100 |       0 |   14.21 |                   
+  components.tsx   |   13.79 |      100 |       0 |   13.79 | ...37-119,126-182 
+  index.tsx        |   15.55 |      100 |       0 |   15.55 | 10-54             
+ .../Settings/Plex |     6.4 |      100 |       0 |     6.4 |                   
+  AuthSection.tsx  |    6.57 |      100 |       0 |    6.57 | 16-189            
+  ...eSelector.tsx |    4.84 |      100 |       0 |    4.84 | 29-219            
+  ...tionsCard.tsx |   11.11 |      100 |       0 |   11.11 | 11-48             
+  ...ySelector.tsx |    6.74 |      100 |       0 |    6.74 | 19-130            
+  PlexSettings.tsx |   45.45 |      100 |       0 |   45.45 | 6-12              
+  ...erSection.tsx |    4.87 |      100 |       0 |    4.87 | 28-265            
+  ...kSelector.tsx |    3.79 |      100 |       0 |    3.79 | 19-265            
+  index.tsx        |   12.04 |      100 |       0 |   12.04 | 16-101            
+ ...ings/Providers |   77.14 |    94.11 |      50 |   77.14 |                   
+  components.tsx   |   23.27 |    92.85 |      25 |   23.27 | ...46-154,178-400 
+  index.tsx        |     100 |      100 |     100 |     100 |                   
+  list.ts          |   99.54 |      100 |       0 |   99.54 | 405-407           
+  options.ts       |     100 |      100 |     100 |     100 |                   
+ ...ettings/Radarr |   16.09 |      100 |       0 |   16.09 |                   
+  index.tsx        |    7.59 |      100 |       0 |    7.59 | 21-108            
+  options.ts       |     100 |      100 |     100 |     100 |                   
+ ...ings/Scheduler |     100 |      100 |     100 |     100 |                   
+  index.tsx        |     100 |      100 |     100 |     100 |                   
+  options.ts       |     100 |      100 |     100 |     100 |                   
+ ...ettings/Sonarr |    14.7 |      100 |       0 |    14.7 |                   
+  index.tsx        |    7.44 |      100 |       0 |    7.44 | 23-127            
+  options.ts       |     100 |      100 |     100 |     100 |                   
+ ...ings/Subtitles |     100 |      100 |    62.5 |     100 |                   
+  index.tsx        |     100 |      100 |   57.14 |     100 |                   
+  options.ts       |     100 |      100 |     100 |     100 |                   
+ ...es/Settings/UI |     100 |      100 |     100 |     100 |                   
+  index.tsx        |     100 |      100 |     100 |     100 |                   
+  options.ts       |     100 |      100 |     100 |     100 |                   
+ ...ngs/components |   46.04 |    91.66 |      50 |   46.04 |                   
+  Card.tsx         |   67.74 |       50 |     100 |   67.74 | 38-47             
+  Layout.tsx       |   89.87 |       75 |     100 |   89.87 | 46-54             
+  LayoutModal.tsx  |   14.86 |      100 |       0 |   14.86 | 28-101            
+  Message.tsx      |     100 |      100 |     100 |     100 |                   
+  Section.tsx      |     100 |      100 |     100 |     100 |                   
+  collapse.tsx     |     100 |      100 |     100 |     100 |                   
+  forms.tsx        |   69.91 |      100 |   53.33 |   69.91 | ...67-170,194-195 
+  index.tsx        |   16.98 |      100 |       0 |   16.98 | 9-63,68-114       
+  pathMapper.tsx   |   10.74 |      100 |       0 |   10.74 | 22-36,48-157      
+ ...ings/utilities |   53.69 |    66.66 |   72.72 |   53.69 |                   
+  FormValues.ts    |    43.1 |       75 |      75 |    43.1 | ...35,39-53,74-86 
+  ...sProvider.tsx |     100 |      100 |     100 |     100 |                   
+  hooks.ts         |   52.77 |    54.54 |   66.66 |   52.77 | ...8-71,79,86-111 
+  modifications.ts |      50 |      100 |      50 |      50 | 2,5               
+ .../Announcements |   90.29 |    88.88 |      75 |   90.29 |                   
+  index.tsx        |     100 |      100 |     100 |     100 |                   
+  table.tsx        |   88.23 |    85.71 |   71.42 |   88.23 | 51,72-73,98-105   
+ ...System/Backups |   53.57 |      100 |      25 |   53.57 |                   
+  index.tsx        |     100 |      100 |      50 |     100 |                   
+  table.tsx        |   41.96 |      100 |   16.66 |   41.96 | ...,68-93,100-124 
+ ...es/System/Logs |   58.88 |    30.76 |      30 |   58.88 |                   
+  index.tsx        |   66.66 |    18.18 |      40 |   66.66 | 26,51-84,114-116  
+  modal.tsx        |    42.1 |      100 |       0 |    42.1 | 10-21             
+  table.tsx        |   51.42 |      100 |      25 |   51.42 | 22-35,45-48,61-78 
+ ...stem/Providers |     100 |      100 |      50 |     100 |                   
+  index.tsx        |     100 |      100 |   33.33 |     100 |                   
+  table.tsx        |     100 |      100 |     100 |     100 |                   
+ ...ystem/Releases |     100 |      100 |     100 |     100 |                   
+  index.tsx        |     100 |      100 |     100 |     100 |                   
+ .../System/Status |   85.18 |    31.57 |   71.42 |   85.18 |                   
+  index.tsx        |   90.24 |    23.52 |     100 |   90.24 | 110-125           
+  table.tsx        |   69.23 |      100 |   33.33 |   69.23 | 17-22,28-33       
+ ...s/System/Tasks |     100 |      100 |   71.42 |     100 |                   
+  index.tsx        |     100 |      100 |      50 |     100 |                   
+  table.tsx        |     100 |      100 |      80 |     100 |                   
+ .../Wanted/Movies |   87.83 |    83.33 |      60 |   87.83 |                   
+  index.tsx        |   87.83 |    83.33 |      60 |   87.83 | 54-62             
+ .../Wanted/Series |   88.63 |    83.33 |      60 |   88.63 |                   
+  index.tsx        |   88.63 |    83.33 |      60 |   88.63 | 68-77             
+ ...c/pages/errors |     100 |       80 |     100 |     100 |                   
+  ...icalError.tsx |     100 |      100 |     100 |     100 |                   
+  NotFound.tsx     |     100 |      100 |     100 |     100 |                   
+  UIError.tsx      |     100 |    66.66 |     100 |     100 | 26                
+ ...rc/pages/views |   47.13 |    77.77 |   45.45 |   47.13 |                   
+  HistoryView.tsx  |     100 |      100 |     100 |     100 |                   
+  ItemOverview.tsx |     6.7 |      100 |       0 |     6.7 | 45-203,211-223    
+  ItemView.tsx     |     100 |      100 |      50 |     100 |                   
+  MassEditor.tsx   |   67.71 |    66.66 |      40 |   67.71 | ...26-127,135-136 
+  WantedView.tsx   |     100 |      100 |     100 |     100 |                   
+ ...tend/src/tests |     100 |      100 |     100 |     100 |                   
+  index.tsx        |     100 |      100 |     100 |     100 |                   
+  render.tsx       |     100 |      100 |     100 |     100 |                   
+ ...rc/tests/mocks |     100 |      100 |     100 |     100 |                   
+  node.ts          |     100 |      100 |     100 |     100 |                   
+ .../src/utilities |   53.14 |    80.26 |   49.27 |   53.14 |                   
+  array.ts         |   24.56 |      100 |   14.28 |   24.56 | ...50,53-55,58-63 
+  console.ts       |   29.03 |    33.33 |      25 |   29.03 | 12-20,24-27,30-38 
+  env.ts           |    65.3 |    38.46 |     100 |    65.3 | ...31,37-42,46-47 
+  event.ts         |    62.5 |      100 |      50 |    62.5 | 16-19,22-24       
+  form.ts          |   30.76 |      100 |       0 |   30.76 | 1-9               
+  function.ts      |   44.44 |      100 |     100 |   44.44 | 10-22             
+  hooks.ts         |   78.74 |    94.73 |     100 |   78.74 | ...,94-96,119-121 
+  index.ts         |   50.76 |    88.88 |   55.55 |   50.76 | ...32,40-42,45-60 
+  languages.ts     |   43.47 |    66.66 |      20 |   43.47 | ...44,47-53,56-57 
+  object.ts        |   28.76 |      100 |   28.57 |   28.76 | ...44,47-65,68-83 
+  routers.ts       |      52 |       50 |   33.33 |      52 | 10,17-27          
+  storage.ts       |   53.33 |      100 |      50 |   53.33 | 7-13              
+  string.ts        |      25 |      100 |       0 |      25 | 4-6,9-11,14-19    
+  time.ts          |     100 |      100 |     100 |     100 |                   
+  validate.ts      |   66.66 |      100 |      50 |   66.66 | ...23,26-27,30-31 
+ ...4193c209135443 |       0 |      100 |     100 |       0 |                   
+  sw.js            |       0 |      100 |     100 |       0 | 25-49             
+-------------------|---------|----------|---------|---------|-------------------
