@@ -6,7 +6,6 @@ import {
   faClipboard,
   faSync,
 } from "@fortawesome/free-solid-svg-icons";
-import { range } from "lodash";
 import { useSystemStatus } from "@/apis/hooks";
 import {
   Action,
@@ -139,7 +138,10 @@ const SettingsGeneralView: FunctionComponent = () => {
       <Section header="Jobs Manager">
         <Selector
           label="Concurrent Jobs"
-          options={range(1, (status?.cpu_cores ?? 3) + 1).map((opt) => ({
+          options={Array.from(
+            { length: status?.cpu_cores ?? 3 },
+            (_, i) => i + 1,
+          ).map((opt) => ({
             label: `${opt.toString()} ${opt === 1 ? "job" : "jobs"}`,
             value: opt,
           }))}
