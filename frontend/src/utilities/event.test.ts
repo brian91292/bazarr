@@ -1,5 +1,5 @@
-import { setAuthenticated, setCriticalError, setOnlineStatus } from "./event";
 import { vi } from "vitest";
+import { setAuthenticated, setCriticalError, setOnlineStatus } from "./event";
 
 describe("event utilities", () => {
   it("setAuthenticated should dispatch app-auth-changed event", () => {

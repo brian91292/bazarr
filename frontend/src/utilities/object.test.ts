@@ -4,7 +4,7 @@ describe("object utilities", () => {
   describe("isObject", () => {
     it("should return true for objects and functions", () => {
       expect(isObject({})).toBe(true);
-      expect(isObject(() => {})).toBe(true);
+      expect(isObject(() => undefined)).toBe(true);
       expect(isObject(new Date())).toBe(true);
     });
 
@@ -59,10 +59,10 @@ describe("object utilities", () => {
     it("should iterate over object properties", () => {
       const obj = { a: 1, b: 2 };
       const keys: string[] = [];
-      const values: any[] = [];
+      const values: number[] = [];
       forIn(obj, (value, key) => {
         keys.push(key);
-        values.push(value);
+        values.push(value as number);
       });
       expect(keys).toEqual(["a", "b"]);
       expect(values).toEqual([1, 2]);

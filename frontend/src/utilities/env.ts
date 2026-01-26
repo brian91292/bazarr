@@ -1,8 +1,8 @@
-const getImportMetaEnv = () => {
+const getImportMetaEnv = (): ImportMeta["env"] => {
   try {
     return import.meta.env;
   } catch {
-    return {} as any;
+    return {} as unknown as ImportMeta["env"];
   }
 };
 
