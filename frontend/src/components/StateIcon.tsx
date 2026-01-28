@@ -52,9 +52,20 @@ const StateIcon: FunctionComponent<StateIconProps> = ({
   };
 
   return (
-    <Popover position="left" opened={opened} width={360} withArrow withinPortal>
+    <Popover
+      position="left"
+      opened={opened}
+      width={360}
+      withArrow
+      withinPortal
+      onClose={close}
+    >
       <Popover.Target>
-        <Text onMouseEnter={open} onMouseLeave={close}>
+        <Text
+          onMouseEnter={isMobile ? undefined : open}
+          onMouseLeave={isMobile ? undefined : close}
+          onClick={isMobile ? (opened ? close : open) : undefined}
+        >
           <PopoverTarget />
         </Text>
       </Popover.Target>
