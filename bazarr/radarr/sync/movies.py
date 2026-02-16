@@ -16,6 +16,7 @@ from radarr.rootfolder import check_radarr_rootfolder
 from subtitles.indexer.movies import store_subtitles_movie
 from subtitles.mass_download import movies_download_subtitles
 from utilities.path_mappings import path_mappings
+from subtitles.adaptive_searching import is_search_active
 
 from sqlalchemy.exc import IntegrityError
 from .parser import movieParser
@@ -136,7 +137,8 @@ def update_movies(job_id=None):
             current_movies_radarr = [movie['id'] for movie in movies if movie['hasFile'] and
                                      'movieFile' in movie and
                                      (movie['movieFile']['size'] > MINIMUM_VIDEO_SIZE or
-                                      get_movie_file_size_from_db(movie['movieFile']['path']) > MINIMUM_VIDEO_SIZE)]
+                                      get_movie_file_size_from_db(movie['movieFile']['path']) > MINIMUM_VIDEO_SIZE or
+                                      (settings.general.enable_strm_support and movie['movieFile']['path'].lower().endswith('.strm')))]
 
             # Remove movies from DB that either no longer exist in Radarr or exist and Radarr says do not have a movie file
             movies_to_delete = list(set(current_movies_id_db) - set(current_movies_radarr))
@@ -174,7 +176,8 @@ def update_movies(job_id=None):
                                 continue
 
                         if (movie['movieFile']['size'] > MINIMUM_VIDEO_SIZE or
-                                get_movie_file_size_from_db(movie['movieFile']['path']) > MINIMUM_VIDEO_SIZE):
+                                get_movie_file_size_from_db(movie['movieFile']['path']) > MINIMUM_VIDEO_SIZE or
+                                (settings.general.enable_strm_support and movie['movieFile']['path'].lower().endswith('.strm'))):
                             # Add/update movies from Radarr that have a movie file to current movies list
                             trace(f"{i}: (Processing) {movie['title']}")
                             if movie['id'] in current_movies_id_db:
@@ -345,6 +348,20 @@ def update_one_movie(movie_id, action, defer_search=False, is_signalr=False):
 
 
 def _is_there_missing_subtitles(radarr_id: int) -> bool:
+    """
+    Determines if there are any missing subtitles for a specified movie in the database.
+
+    This function checks a movie identified by its radarr_id within the database to
+    see if there are subtitles flagged as missing. It also considers the search activity
+    status for the missing subtitles to determine whether there are active missing episodes.
+
+    :param radarr_id: The ID of the movie in the Radarr system.
+    :type radarr_id: int
+
+    :return: A boolean indicating whether there are any active missing subtitles
+             for the specified movie.
+    :rtype: bool
+    """
     movies_conditions = [(TableMovies.missing_subtitles.is_not(None)),
                          (TableMovies.missing_subtitles != '[]'),
                          (TableMovies.radarrId == radarr_id)]
@@ -352,8 +369,12 @@ def _is_there_missing_subtitles(radarr_id: int) -> bool:
         return False
     movies_conditions += get_exclusion_clause('movie')
     missing_movies = database.execute(
-        select(TableMovies.missing_subtitles)
+        select(TableMovies.missing_subtitles, TableMovies.failedAttempts)
         .select_from(TableMovies)
         .where(reduce(operator.and_, movies_conditions))) \
         .all()
-    return len(missing_movies) > 0
+    for missing_movie in missing_movies:
+        for language in missing_movie.missing_subtitles:
+            if is_search_active(desired_language=language, attempt_string=missing_movie.failedAttempts):
+                return True
+    return False

@@ -59,7 +59,7 @@ class SubsourceSubtitle(Subtitle):
         self.page_link = page_link
         self.download_link = None
         self.uploader = uploader
-        self.matches = None
+        self.matches = set()
         self.season = season
         self.episode = episode
         self.asked_for_episode = asked_for_episode
@@ -179,6 +179,27 @@ class SubsourceProvider(ProviderRetryMixin, Provider, ProviderSubtitleArchiveMix
 
         # deserialize results
         results_dict = results.json()['data']
+
+        if imdb_id and not results_dict:
+            logger.debug(f'No results for IMDb ID {imdb_id}. Falling back to text search for: {title}')
+            
+            parameters = {
+                'api_key': self.api_key,
+                'searchType': 'text',
+                'q': title.lower(),
+            }
+            if season:
+                parameters['season'] = season
+
+            results = self.retry(
+                lambda: self.session.get(self._server_url() + 'movies/search', params=parameters, timeout=30),
+                amount=retry_amount,
+                retry_timeout=retry_timeout
+            )
+            
+            self._status_raiser(results)
+            results_dict = results.json()['data']
+
         def get_alternative_titles(video):
             titles = set()
             if isinstance(video, Episode):
@@ -320,8 +341,8 @@ class SubsourceProvider(ProviderRetryMixin, Provider, ProviderSubtitleArchiveMix
                     season, episode = self._get_season_episode_from_release_info(item['releaseInfo'])
                     if season == video.season and (not episode or episode == video.episode):
                         subtitle = SubsourceSubtitle(
-                            language=Language.fromalpha3b(language_converters['subsource'].reverse(item['language']
-                                                                                                   .capitalize())[0]),
+                            language=Language.fromietf(language_converters['subsource'].reverse(item['language']
+                                                                                                .capitalize())[0]),
                             forced=is_forced,
                             hearing_impaired=is_hi,
                             page_link=page_link,
@@ -338,8 +359,8 @@ class SubsourceProvider(ProviderRetryMixin, Provider, ProviderSubtitleArchiveMix
                 else:
 
                     subtitle = SubsourceSubtitle(
-                        language=Language.fromalpha3b(language_converters['subsource'].reverse(item['language']
-                                                                                               .capitalize())[0]),
+                        language=Language.fromietf(language_converters['subsource'].reverse(item['language']
+                                                                                            .capitalize())[0]),
                         forced=is_forced,
                         hearing_impaired=is_hi,
                         page_link=page_link,

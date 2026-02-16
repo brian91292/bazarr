@@ -73,7 +73,6 @@ If you need something that is not already part of Bazarr, feel free to create a 
 - Podnapisi
 - RegieLive
 - Sous-Titres.eu
-- Subdivx
 - subf2m.co
 - Subs.sab.bz
 - Subs4Free
@@ -83,9 +82,11 @@ If you need something that is not already part of Bazarr, feel free to create a 
 - SubsRo
 - Subsunacs.net
 - SubSynchro
+- Subtis
 - Subtitrari-noi.ro
 - subtitri.id.lv
 - Subtitulamos.tv
+- SubX
 - Supersubtitles
 - Titlovi
 - Titrari.ro

@@ -27,23 +27,22 @@ class Napisy24Subtitle(Subtitle):
         self.imdb_id = imdb_id
         self.napis_id = napis_id
         self.release_info = ''  # TODO Try to get the release info from parsing the page
+        self.matches = set()
 
     @property
     def id(self):
         return self.hash
 
     def get_matches(self, video):
-        matches = set()
-
         # hash
         if 'napisy24' in video.hashes and video.hashes['napisy24'] == self.hash:
-            matches.add('hash')
+            self.matches.add('hash')
 
         # imdb_id
         if video.imdb_id and self.imdb_id == video.imdb_id:
-            matches.add('imdb_id')
+            self.matches.add('imdb_id')
 
-        return matches
+        return self.matches
 
 
 class Napisy24Provider(Provider):

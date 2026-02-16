@@ -5,7 +5,7 @@ import sys
 
 from flask_restx import Resource, Namespace, reqparse, fields, marshal
 
-from app.database import TableEpisodes, TableMovies, database, select, get_subtitles
+from app.database import TableShows, TableEpisodes, TableMovies, database, select, get_subtitles
 from languages.get_languages import alpha3_from_alpha2
 from utilities.path_mappings import path_mappings
 from utilities.video_analyzer import subtitles_sync_references
@@ -17,6 +17,8 @@ from subtitles.indexer.movies import store_subtitles_movie
 from subtitles.sync import sync_subtitles
 from app.config import settings, empty_values, get_array_from
 from app.event_handler import event_stream
+from plex.operations import plex_refresh_item
+
 
 from ..utils import authenticate
 
@@ -121,7 +123,8 @@ class Subtitles(Resource):
 
         if media_type == 'episode':
             metadata = database.execute(
-                select(TableEpisodes.path, TableEpisodes.sonarrSeriesId)
+                select(TableEpisodes.path, TableEpisodes.sonarrSeriesId, TableEpisodes.season,
+                       TableEpisodes.episode, TableShows.imdbId)
                 .where(TableEpisodes.sonarrEpisodeId == id)) \
                 .first()
 
@@ -131,7 +134,7 @@ class Subtitles(Resource):
             video_path = path_mappings.path_replace(metadata.path)
         else:
             metadata = database.execute(
-                select(TableMovies.path)
+                select(TableMovies.path, TableMovies.imdbId)
                 .where(TableMovies.radarrId == id))\
                 .first()
 
@@ -200,8 +203,15 @@ class Subtitles(Resource):
             store_subtitles(id)
             event_stream(type='series', payload=metadata.sonarrSeriesId)
             event_stream(type='episode', payload=id)
+
+            if settings.general.use_plex and settings.plex.update_series_library:
+                plex_refresh_item(metadata.imdbId, is_movie=False, season=metadata.season,
+                                  episode=metadata.episode)
         else:
             store_subtitles_movie(id)
             event_stream(type='movie', payload=id)
+
+            if settings.general.use_plex and settings.plex.update_movie_library:
+                plex_refresh_item(metadata.imdbId, is_movie=True)
 
         return '', 204

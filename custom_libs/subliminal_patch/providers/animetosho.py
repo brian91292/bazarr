@@ -55,20 +55,20 @@ class AnimeToshoSubtitle(Subtitle):
         self.meta = meta
         self.download_link = download_link
         self.release_info = release_info
+        self.matches = set()
 
     @property
     def id(self):
         return self.download_link
 
     def get_matches(self, video):
-        matches = set()
-        matches |= guess_matches(video, guessit(self.meta['filename']))
+        self.matches |= guess_matches(video, guessit(self.meta['filename']))
 
         # Add these data are explicit extracted from the API and they always have to match otherwise they wouldn't
         # arrive at this point and would stop on list_subtitles.
-        matches.update(['title', 'series', 'tvdb_id', 'season', 'episode'])
+        self.matches.update(['title', 'series', 'tvdb_id', 'season', 'episode'])
 
-        return matches
+        return self.matches
 
 
 class AnimeToshoProvider(Provider, ProviderSubtitleArchiveMixin):

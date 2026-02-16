@@ -34,12 +34,12 @@ from .sync import sync_subtitles
 from .post_processing import postprocessing
 
 
-def manual_upload_subtitle(path, language, forced, hi, media_type, subtitle, audio_language, job_id=None,
+def manual_upload_subtitle(path, language, forced, hi, media_type, subtitle, filename, audio_language, job_id=None,
                            sonarrSeriesId=None, sonarrEpisodeId=None, radarrId=None):
     if not job_id:
-        return jobs_queue.add_job_from_function(f"Uploading {subtitle.filename}", is_progress=False)
+        return jobs_queue.add_job_from_function(f"Uploading {filename}", is_progress=False)
 
-    logging.debug(f'BAZARR Manually uploading subtitles: {subtitle.filename}')
+    logging.debug(f'BAZARR Manually uploading subtitles: {filename}')
 
     single = settings.general.single_language
 
@@ -100,28 +100,30 @@ def manual_upload_subtitle(path, language, forced, hi, media_type, subtitle, aud
         original_format=use_original_format
     )
 
-    sub.content = subtitle.read()
+    sub.content = subtitle.getvalue()
     if not sub.is_valid():
-        logging.exception(f'BAZARR Invalid subtitle file: {subtitle.filename}')
+        logging.exception(f'BAZARR Invalid subtitle file: {filename}')
         sub.mods = None
 
     if settings.general.utf8_encode:
         sub.set_encoding("utf-8")
 
     try:
-        sub.format = (get_format_identifier(os.path.splitext(subtitle.filename)[1]),)
+        sub.format = (get_format_identifier(os.path.splitext(filename)[1]),)
     except Exception:
         pass
 
     saved_subtitles = []
     try:
+        # ensure that formats must be a tuple of strings
+        sub_format = (sub.format,) if isinstance(sub.format, str) else sub.format
         saved_subtitles = save_subtitles(path,
                                          [sub],
                                          single=single,
                                          tags=None,  # fixme
                                          directory=get_target_folder(path),
                                          chmod=chmod,
-                                         formats=(sub.format,) if use_original_format else ("srt",),
+                                         formats=sub_format if use_original_format else ("srt",),
                                          path_decoder=force_unicode)
     except Exception as e:
         logging.exception(f'BAZARR Error saving Subtitles file to disk for this file {path}: {repr(e)}')
@@ -161,7 +163,7 @@ def manual_upload_subtitle(path, language, forced, hi, media_type, subtitle, aud
     if media_type == 'series':
         sync_subtitles(video_path=path, srt_path=subtitle_path, srt_lang=uploaded_language_code2, percent_score=100,
                        sonarr_series_id=episode_metadata.sonarrSeriesId, forced=forced, hi=hi,
-                       sonarr_episode_id=episode_metadata.sonarrEpisodeId, job_id=job_id, job_sub_function=True,)
+                       sonarr_episode_id=episode_metadata.sonarrEpisodeId, job_id=job_id)
         reversed_path = path_mappings.path_replace_reverse(path)
         reversed_subtitles_path = path_mappings.path_replace_reverse(subtitle_path)
         notify_sonarr(episode_metadata.sonarrSeriesId)
@@ -169,7 +171,7 @@ def manual_upload_subtitle(path, language, forced, hi, media_type, subtitle, aud
         event_stream(type='episode-wanted', action='delete', payload=episode_metadata.sonarrEpisodeId)
     else:
         sync_subtitles(video_path=path, srt_path=subtitle_path, srt_lang=uploaded_language_code2, percent_score=100,
-                       radarr_id=movie_metadata.radarrId, forced=forced, hi=hi, job_id=job_id, job_sub_function=True,)
+                       radarr_id=movie_metadata.radarrId, forced=forced, hi=hi, job_id=job_id)
         reversed_path = path_mappings.path_replace_reverse_movie(path)
         reversed_subtitles_path = path_mappings.path_replace_reverse_movie(subtitle_path)
         notify_radarr(movie_metadata.radarrId)

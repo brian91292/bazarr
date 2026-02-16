@@ -76,6 +76,7 @@ class AssrtSubtitle(Subtitle):
         self.release_info = video_name
         self.url = None
         self._detail = None
+        self.matches = set()
 
     def _get_detail(self):
         if self._detail:
@@ -130,8 +131,8 @@ class AssrtSubtitle(Subtitle):
         return detail['url']
 
     def get_matches(self, video):
-        matches = guess_matches(video, guessit(self.video_name))
-        return matches
+        self.matches = guess_matches(video, guessit(self.video_name))
+        return self.matches
 
 
 class AssrtProvider(Provider):

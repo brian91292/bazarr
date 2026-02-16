@@ -14,9 +14,8 @@ import re
 
 from requests import ConnectionError
 from subzero.language import Language
-from subliminal_patch.exceptions import TooManyRequests, APIThrottled, ParseResponseError, IPAddressBlocked, \
-    MustGetBlacklisted, SearchLimitReached, ProviderError, ForbiddenError
-from subliminal.providers.opensubtitles import DownloadLimitReached, PaymentRequired, Unauthorized
+from subliminal_patch.exceptions import (TooManyRequests, APIThrottled, ParseResponseError, IPAddressBlocked,
+                                         MustGetBlacklisted, SearchLimitReached, ProviderError, ForbiddenError)
 from subliminal.exceptions import DownloadLimitExceeded, ServiceUnavailable, AuthenticationError, ConfigurationError
 from subliminal import region as subliminal_cache_region
 from subliminal_patch.extensions import provider_registry
@@ -79,15 +78,6 @@ def provider_throttle_map():
             requests.exceptions.ProxyError: (datetime.timedelta(hours=1), "1 hour"),
             AuthenticationError: (datetime.timedelta(hours=12), "12 hours"),
         },
-        "opensubtitles": {
-            TooManyRequests: (datetime.timedelta(hours=3), "3 hours"),
-            DownloadLimitExceeded: (datetime.timedelta(hours=6), "6 hours"),
-            DownloadLimitReached: (datetime.timedelta(hours=6), "6 hours"),
-            PaymentRequired: (datetime.timedelta(hours=12), "12 hours"),
-            Unauthorized: (datetime.timedelta(hours=12), "12 hours"),
-            APIThrottled: (datetime.timedelta(seconds=15), "15 seconds"),
-            ServiceUnavailable: (datetime.timedelta(hours=1), "1 hour"),
-        },
         "opensubtitlescom": {
             TooManyRequests: (datetime.timedelta(minutes=1), "1 minute"),
             DownloadLimitExceeded: (datetime.timedelta(hours=6), "6 hours"),
@@ -104,6 +94,7 @@ def provider_throttle_map():
             TooManyRequests: (datetime.timedelta(minutes=10), "10 minutes"),
         },
         "titulky": {
+            TooManyRequests: (datetime.timedelta(minutes=1), "1 minute"),
             DownloadLimitExceeded: (
                 titulky_limit_reset_timedelta(),
                 f"{titulky_limit_reset_timedelta().seconds // 3600 + 1} hours")
@@ -253,21 +244,11 @@ def get_providers_auth():
             'cookies': settings.cinemaz.cookies,
             'user_agent': settings.cinemaz.user_agent,
         },
-        'opensubtitles': {
-            'username': settings.opensubtitles.username,
-            'password': settings.opensubtitles.password,
-            'use_tag_search': settings.opensubtitles.use_tag_search,
-            'only_foreign': False,  # fixme
-            'also_foreign': False,  # fixme
-            'is_vip': settings.opensubtitles.vip,
-            'use_ssl': settings.opensubtitles.ssl,
-            'timeout': int(settings.opensubtitles.timeout) or 15,
-            'skip_wrong_fps': settings.opensubtitles.skip_wrong_fps,
-        },
         'opensubtitlescom': {'username': settings.opensubtitlescom.username,
                              'password': settings.opensubtitlescom.password,
                              'use_hash': settings.opensubtitlescom.use_hash,
                              'include_ai_translated': settings.opensubtitlescom.include_ai_translated,
+                             'include_machine_translated': settings.opensubtitlescom.include_machine_translated,
                              'api_key': 's38zmzVlW7IlYruWi7mHwDYl2SfMQoC1'
                              },
         'napiprojekt': {'only_authors': settings.napiprojekt.only_authors,
@@ -363,7 +344,11 @@ def get_providers_auth():
         'subsource': {
             'api_key': settings.subsource.apikey,
         },
-        'animesubinfo': {}
+        'animesubinfo': {},
+        'subx':
+            {
+                'api_key': settings.subx.api_key,
+            }
     }
 
 

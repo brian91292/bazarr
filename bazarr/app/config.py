@@ -10,9 +10,9 @@ import threading
 import time
 from datetime import datetime
 
-import random
 import configparser
 import yaml
+import platform
 
 from urllib.parse import quote_plus
 from utilities.binaries import BinaryNotFound, get_binary
@@ -86,6 +86,7 @@ validators = [
               is_type_of=str),
     Validator('general.ip', must_exist=True, default='*', is_type_of=str, condition=validate_ip_address),
     Validator('general.port', must_exist=True, default=6767, is_type_of=int, gte=1, lte=65535),
+    Validator('general.hostname', must_exist=True, default=platform.node(), is_type_of=str),
     Validator('general.base_url', must_exist=True, default='', is_type_of=str),
     Validator('general.instance_name', must_exist=True, default='Bazarr', is_type_of=str,
               apply_default_on_none=True),
@@ -140,6 +141,7 @@ validators = [
     Validator('general.enabled_integrations', must_exist=True, default=[], is_type_of=list),
     Validator('general.multithreading', must_exist=True, default=True, is_type_of=bool),
     Validator('general.chmod_enabled', must_exist=True, default=False, is_type_of=bool),
+    Validator('general.enable_strm_support', must_exist=True, default=False, is_type_of=bool),
     Validator('general.chmod', must_exist=True, default='0640', is_type_of=str),
     Validator('general.subfolder', must_exist=True, default='current', is_type_of=str),
     Validator('general.subfolder_custom', must_exist=True, default='', is_type_of=str),
@@ -164,6 +166,8 @@ validators = [
     Validator('general.parse_embedded_audio_track', must_exist=True, default=False, is_type_of=bool),
     Validator('general.skip_hashing', must_exist=True, default=False, is_type_of=bool),
     Validator('general.language_equals', must_exist=True, default=[], is_type_of=list),
+    Validator('general.concurrent_jobs', must_exist=True, default=4 if os.cpu_count() >= 4 else os.cpu_count(),
+              is_type_of=int),
 
     # log section
     Validator('log.include_filter', must_exist=True, default='', is_type_of=str, cast=str),
@@ -284,20 +288,12 @@ validators = [
     Validator('proxy.password', must_exist=True, default='', is_type_of=str, cast=str),
     Validator('proxy.exclude', must_exist=True, default=["localhost", "127.0.0.1"], is_type_of=list),
 
-    # opensubtitles.org section
-    Validator('opensubtitles.username', must_exist=True, default='', is_type_of=str, cast=str),
-    Validator('opensubtitles.password', must_exist=True, default='', is_type_of=str, cast=str),
-    Validator('opensubtitles.use_tag_search', must_exist=True, default=False, is_type_of=bool),
-    Validator('opensubtitles.vip', must_exist=True, default=False, is_type_of=bool),
-    Validator('opensubtitles.ssl', must_exist=True, default=False, is_type_of=bool),
-    Validator('opensubtitles.timeout', must_exist=True, default=15, is_type_of=int, gte=1),
-    Validator('opensubtitles.skip_wrong_fps', must_exist=True, default=False, is_type_of=bool),
-
     # opensubtitles.com section
     Validator('opensubtitlescom.username', must_exist=True, default='', is_type_of=str, cast=str),
     Validator('opensubtitlescom.password', must_exist=True, default='', is_type_of=str, cast=str),
     Validator('opensubtitlescom.use_hash', must_exist=True, default=True, is_type_of=bool),
     Validator('opensubtitlescom.include_ai_translated', must_exist=True, default=False, is_type_of=bool),
+    Validator('opensubtitlescom.include_machine_translated', must_exist=True, default=False, is_type_of=bool),
 
     # napiprojekt section
     Validator('napiprojekt.only_authors', must_exist=True, default=False, is_type_of=bool),
@@ -473,6 +469,9 @@ validators = [
 
     # subsource section
     Validator('subsource.apikey', must_exist=True, default='', is_type_of=str),
+
+    # subx section
+    Validator('subx.api_key', must_exist=True, default='', is_type_of=str),
 ]
 
 
@@ -503,6 +502,9 @@ elif not os.path.exists(config_yaml_file):
     if not os.path.isdir(os.path.dirname(config_yaml_file)):
         os.makedirs(os.path.dirname(config_yaml_file))
     open(config_yaml_file, mode='w').close()
+
+if os.path.exists(config_yaml_file):
+    os.environ['BAZARR_CONFIGURED'] = '1'
 
 settings = Dynaconf(
     settings_file=config_yaml_file,
@@ -786,15 +788,6 @@ def save_settings(settings_items):
                 reset_providers = True
                 region.delete('legendasdivx_cookies2')
 
-        if key == 'settings-opensubtitles-username':
-            if key != settings.opensubtitles.username:
-                reset_providers = True
-                region.delete('os_token')
-        elif key == 'settings-opensubtitles-password':
-            if key != settings.opensubtitles.password:
-                reset_providers = True
-                region.delete('os_token')
-
         if key == 'settings-opensubtitlescom-username':
             if key != settings.opensubtitlescom.username:
                 reset_providers = True
@@ -886,6 +879,12 @@ def save_settings(settings_items):
         raise
     else:
         write_config()
+
+        # Set the configured state based on config.yaml file existence
+        from .database import database, update, System
+        database.execute(
+            update(System)
+            .values(configured=1))
 
         # Reconfigure Bazarr to reflect changes
         if configure_debug:
