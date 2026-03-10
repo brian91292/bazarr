@@ -47,8 +47,8 @@
     "@types/node": "^22.14.1",
     "@types/react": "^19.2.3",
     "@types/react-dom": "^19.2.3",
-    "@typescript-eslint/eslint-plugin": "^7.16.0",
-    "@typescript-eslint/parser": "^7.16.0",
+    "@typescript-eslint/eslint-plugin": "^8.57.0",
+    "@typescript-eslint/parser": "^8.57.0",
     "@vite-pwa/assets-generator": "^1.0.0",
     "@vitejs/plugin-react": "^5.0.1",
     "@vitest/coverage-v8": "^4.0.18",
@@ -108,6 +108,9 @@
     ]
   },
   "overrides": {
-    "serialize-javascript": "^7.0.4"
+    "serialize-javascript": "^7.0.4",
+    "eslint-plugin-react-hooks": {
+      "eslint": "$eslint"
+    }
   }
 }
