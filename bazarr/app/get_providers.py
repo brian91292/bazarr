@@ -32,8 +32,7 @@ from utilities.analytics import event_tracker
 _TRACEBACK_RE = re.compile(r'File "(.*?providers[\\/].*?)", line (\d+)')
 
 
-def time_until_midnight(timezone):
-    # type: (datetime.datetime) -> datetime.timedelta
+def time_until_midnight(timezone: ZoneInfo) -> datetime.timedelta:
     """
     Get timedelta until midnight.
     """
@@ -46,13 +45,13 @@ def time_until_midnight(timezone):
 # Titulky resets its download limits at the start of a new day from its perspective - the Europe/Prague timezone
 # Needs to convert to offset-naive dt
 def titulky_limit_reset_timedelta():
-    return time_until_midnight(timezone=datetime.datetime.now(ZoneInfo('Europe/Prague')))
+    return time_until_midnight(timezone=ZoneInfo('Europe/Prague'))
 
 
 # LegendasDivx reset its searches limit at approximately midnight, Lisbon time, every day. We wait 1 more hours just
 # to be sure.
 def legendasdivx_limit_reset_timedelta():
-    return time_until_midnight(timezone=datetime.datetime.now(ZoneInfo('Europe/Lisbon'))) + datetime.timedelta(minutes=60)
+    return time_until_midnight(timezone=ZoneInfo('Europe/Lisbon')) + datetime.timedelta(minutes=60)
 
 
 VALID_THROTTLE_EXCEPTIONS = (TooManyRequests, DownloadLimitExceeded, ServiceUnavailable, APIThrottled,
