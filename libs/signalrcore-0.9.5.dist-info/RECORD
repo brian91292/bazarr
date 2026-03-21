@@ -1,9 +1,9 @@
 signalrcore-0.9.5.dist-info/INSTALLER,sha256=zuuue4knoyJ-UwPPXg8fezS7VCrXJQrAP7zeNuwvFQg,4
-signalrcore-0.9.5.dist-info/LICENSE,sha256=zlgZo2qli0c9PLoPObfeGy9yEXuQOV2HF26LykBg5Ko,1101
-signalrcore-0.9.5.dist-info/METADATA,sha256=-OzvuEVNms2lGfgvQJyWuZ8wHWiDY-SGHTZ8VSQdiwc,10509
+signalrcore-0.9.5.dist-info/METADATA,sha256=frvFVYcPs8iidlmq1VBbyUpJvoPNW2IafIIOwtVZ_iY,10718
 signalrcore-0.9.5.dist-info/RECORD,,
 signalrcore-0.9.5.dist-info/REQUESTED,sha256=47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU,0
-signalrcore-0.9.5.dist-info/WHEEL,sha256=Xo9-1PvkuimrydujYJAjF7pCkriuXBpUPEjma1nZyJ0,92
+signalrcore-0.9.5.dist-info/WHEEL,sha256=wUyA8OaulRlbfwMtmQsvNngGrxQHAvkKcvRmdizlJi0,92
+signalrcore-0.9.5.dist-info/licenses/LICENSE,sha256=zlgZo2qli0c9PLoPObfeGy9yEXuQOV2HF26LykBg5Ko,1101
 signalrcore-0.9.5.dist-info/top_level.txt,sha256=I28KSOVJS0rNgMCI8E8W-13gvoCGHkmwc6z4NSrQlo0,17
 signalrcore/__init__.py,sha256=47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU,0
 signalrcore/helpers.py,sha256=uoQCHrT1M2_7fMOYmD-Piw4za2AGz6TENYhe3vvMffw,2756

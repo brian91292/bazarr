@@ -27,6 +27,9 @@ logger = logging.getLogger(__name__)
 
 _SUBX_BASE_URL = "https://subx-api.duckdns.org"
 
+# Regex to detect Spain Spanish in descriptions (same as Subdivx provider)
+_SPANISH_RE = re.compile(r"españa|ib[eé]rico|castellano|gallego|castilla|europ[ae]", re.IGNORECASE)
+
 
 # ---------------------------
 # Helpers
@@ -112,8 +115,8 @@ class SubxSubtitle(Subtitle):
 
     def get_matches(self, video):
         """Determines which features match the video."""
-        self.matches = set()  # ← Cambiar de 'matches' a 'self.matches'
-    
+        self.matches = set()
+
         if isinstance(video, Episode):
             self.matches.update({"title", "series", "year"})
             
@@ -133,20 +136,21 @@ class SubxSubtitle(Subtitle):
         
         elif isinstance(video, Movie):
             self.matches.update({"title", "year"})
-    
+
         # Update matches from release info, but preserve episode match for season packs
         is_season_pack = isinstance(video, Episode) and self.episode is None
         if is_season_pack:
             # Temporarily store that this is a season pack
-            had_episode_match = "episode" in self.matches  # ← self.matches
+            had_episode_match = "episode" in self.matches
         
-        update_matches(self.matches, video, self.release_info)  # ← self.matches
+        update_matches(self.matches, video, self.release_info)
         
         # Restore episode match for season packs (it might be removed by update_matches)
         if is_season_pack and had_episode_match:
-            self.matches.add("episode")  # ← self.matches
+            self.matches.add("episode")
         
-        return self.matches  # ← self.matches
+        return self.matches
+
 
 # ---------------------------
 # Provider Class
@@ -252,9 +256,9 @@ class SubxSubtitlesProvider(Provider):
                     return []
                 
                 elif response.status_code == 429:
-                    # Rate limited - exponential backoff
+                    # Rate limited - use Retry-After header if available
                     if attempt < max_retries - 1:
-                        wait_time = 2 ** attempt
+                        wait_time = int(response.headers.get("Retry-After", 60 * (attempt + 1)))
                         logger.warning("Rate limit hit, waiting %ds before retry %d/%d", 
                                      wait_time, attempt + 1, max_retries)
                         time.sleep(wait_time)
@@ -278,6 +282,33 @@ class SubxSubtitlesProvider(Provider):
                 # Success
                 response.raise_for_status()
                 data = response.json()
+
+                # Proactively slow down if approaching rate limit
+                remaining = response.headers.get("X-RateLimit-Remaining")
+                limit = response.headers.get("X-RateLimit-Limit")
+                reset = response.headers.get("X-RateLimit-Reset")
+
+                if remaining is not None and limit is not None:
+                    try:
+                        remaining_int = int(remaining)
+                        limit_int = int(limit)
+                        
+                        # Slow down when below 20% of quota
+                        if remaining_int < limit_int * 0.2:
+                            if reset is not None:
+                                # Wait exactly until the window resets
+                                wait_time = max(0, int(reset) - int(time.time()))
+                            else:
+                                wait_time = 2  # Fallback
+                            
+                            logger.warning(
+                                "Approaching SubX rate limit (%d/%d remaining), waiting %ds",
+                                remaining_int, limit_int, wait_time
+                            )
+                            time.sleep(wait_time)
+                    except ValueError:
+                        pass
+
                 break  # Exit retry loop
                 
             except Exception as e:
@@ -339,12 +370,17 @@ class SubxSubtitlesProvider(Provider):
             if not page_url and item.get("id"):
                 page_url = f"{_SUBX_BASE_URL}/api/subtitles/{item['id']}"
 
+            # Detect language variant (Spain vs LatAm) from description
+            description = item.get("description") or ""
+            spain = _SPANISH_RE.search(description.lower()) is not None
+            language = Language.fromalpha2("es") if spain else Language("spa", "MX")
+
             subtitles.append(self.subtitle_class(
-                language=Language.fromalpha2("es"),
+                language=language,
                 video=video,
                 page_link=page_url,
                 title=item.get("title"),
-                description=item.get("description", ""),
+                description=description,
                 uploader=item.get("uploader_name", "unknown"),
                 download_url=f"{_SUBX_BASE_URL}/api/subtitles/{item['id']}/download",
                 season=item_season,
@@ -359,12 +395,17 @@ class SubxSubtitlesProvider(Provider):
                 if not page_url and item.get("id"):
                     page_url = f"{_SUBX_BASE_URL}/api/subtitles/{item['id']}"
 
+                # Detect language variant from description
+                description = item.get("description") or ""
+                spain = _SPANISH_RE.search(description.lower()) is not None
+                language = Language.fromalpha2("es") if spain else Language("spa", "MX")
+
                 subtitles.append(self.subtitle_class(
-                    language=Language.fromalpha2("es"),
+                    language=language,
                     video=video,
                     page_link=page_url,
                     title=item.get("title"),
-                    description=item.get("description", ""),
+                    description=description,
                     uploader=item.get("uploader_name", "unknown"),
                     download_url=f"{_SUBX_BASE_URL}/api/subtitles/{item['id']}/download",
                     season=item.get("season"),

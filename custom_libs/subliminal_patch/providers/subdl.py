@@ -220,7 +220,11 @@ class SubdlProvider(ProviderRetryMixin, Provider):
         if ('success' in result and not result['success']) or ('status' in result and not result['status']):
             logger.debug(result)
             if 'error' in result:
-                raise ProviderError(result['error'])
+                error_msg = result['error']
+                if "can't find" in error_msg.lower():
+                    logger.debug(f"No subtitles found for {imdb_id or title}: {error_msg}")
+                    return subtitles
+                raise ProviderError(error_msg)
 
         logger.debug(f"Query returned {len(result['subtitles'])} subtitles")
 

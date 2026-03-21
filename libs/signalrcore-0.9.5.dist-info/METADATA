@@ -1,4 +1,4 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: signalrcore
 Version: 0.9.5
 Summary: A Python SignalR Core client(json and messagepack), with invocation auth and two way streaming. Compatible with azure / serverless functions. Also with automatic reconnect and manually reconnect.
@@ -9,9 +9,19 @@ Keywords: signalr core client 3.1
 Classifier: Programming Language :: Python :: 3.6
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: requests >=2.22.0
-Requires-Dist: websocket-client ==1.0.0
-Requires-Dist: msgpack ==1.0.2
+Requires-Dist: requests>=2.22.0
+Requires-Dist: websocket-client==1.0.0
+Requires-Dist: msgpack==1.0.2
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license-file
+Dynamic: requires-dist
+Dynamic: summary
 
 # SignalR core client
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg?logo=paypal&style=flat-square)](https://www.paypal.me/mandrewcito/1)

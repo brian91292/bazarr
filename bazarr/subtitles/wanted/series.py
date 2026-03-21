@@ -4,6 +4,7 @@
 import ast
 import logging
 import operator
+import gc
 
 from functools import reduce
 
@@ -150,3 +151,5 @@ def wanted_search_missing_subtitles_series(job_id=None):
 
     jobs_queue.update_job_name(job_id=job_id, new_job_name="Searched for missing series subtitles")
     logging.info('BAZARR Finished searching for missing Series Subtitles. Check History for more information.')
+
+    gc.collect()
