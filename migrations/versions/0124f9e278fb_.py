@@ -1,7 +1,7 @@
 """empty message
 
 Revision ID: 0124f9e278fb
-Revises: df76a4410347
+Revises: c00d40af333c
 Create Date: 2025-12-21 21:54:24.686059
 
 """
@@ -14,7 +14,7 @@ from app.database import TableEpisodesSubtitles, TableMoviesSubtitles
 
 # revision identifiers, used by Alembic.
 revision = '0124f9e278fb'
-down_revision = 'df76a4410347'
+down_revision = 'c00d40af333c'
 branch_labels = None
 depends_on = None
 
