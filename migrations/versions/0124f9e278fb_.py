@@ -33,9 +33,10 @@ def parse_language(language):
 def upgrade():
     # we do a raw SQL query to avoid the need to modify the TableEpisodes model
     try:
-        episodes = bind.exec_driver_sql("SELECT sonarrEpisodeId, sonarrSeriesId, subtitles "
-                                        "FROM table_episodes "
-                                        "WHERE subtitles IS NOT NULL AND subtitles != '[]';")
+        episodes = bind.exec_driver_sql('SELECT "sonarrEpisodeId", "sonarrSeriesId", "subtitles" '
+                                        'FROM table_episodes '
+                                        'WHERE table_episodes.subtitles IS NOT NULL '
+                                        'AND table_episodes.subtitles != \'[]\';')
     except sa.exc.OperationalError:
         pass
     else:
@@ -61,9 +62,10 @@ def upgrade():
 
     # we do a raw SQL query to avoid the need to modify the TableMovies model
     try:
-        movies = bind.exec_driver_sql("SELECT radarrId, subtitles "
-                                      "FROM table_movies "
-                                      "WHERE subtitles IS NOT NULL AND subtitles != '[]';")
+        movies = bind.exec_driver_sql('SELECT "radarrId", "subtitles" '
+                                      'FROM table_movies '
+                                      'WHERE table_movies.subtitles IS NOT NULL '
+                                      'AND table_movies.subtitles != \'[]\';')
     except sa.exc.OperationalError:
         pass
     else:
