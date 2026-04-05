@@ -31,62 +31,88 @@ def parse_language(language):
 
 
 def upgrade():
-    # we do a raw SQL query to avoid the need to modify the TableEpisodes model
-    try:
-        episodes = bind.exec_driver_sql('SELECT "sonarrEpisodeId", "sonarrSeriesId", "subtitles" '
-                                        'FROM table_episodes '
-                                        'WHERE table_episodes.subtitles IS NOT NULL '
-                                        'AND table_episodes.subtitles != \'[]\';')
-    except sa.exc.OperationalError:
-        pass
+    if bind.engine.name == 'postgresql':
+        episodes_subtitles_column_exists = bind.exec_driver_sql('SELECT count(*) '
+                                                                'FROM information_schema.columns '
+                                                                'WHERE table_schema = \'public\' '
+                                                                'AND table_name=\'table_episodes\' '
+                                                                'AND column_name=\'subtitles\';')
     else:
-        for episode in episodes:
-            try:
-                subtitles = ast.literal_eval(episode.subtitles)
-            except Exception:
-                continue
-            else:
-                for subtitle in subtitles:
-                    subtitle_language = parse_language(subtitle[0])
-                    bind.execute(sa.insert(TableEpisodesSubtitles).values(
-                        sonarrEpisodeId=episode.sonarrEpisodeId,
-                        sonarrSeriesId=episode.sonarrSeriesId,
-                        language=subtitle_language[0],
-                        hi=subtitle_language[1],
-                        forced=subtitle_language[2],
-                        path=subtitle[1],
-                        size=subtitle[2]
-                    ))
+        episodes_subtitles_column_exists = bind.exec_driver_sql('SELECT count(*) '
+                                                                'FROM pragma_table_info(\'table_episodes\') '
+                                                                'WHERE name=\'subtitles\';')
+    episodes_subtitles_column_exists = bool(episodes_subtitles_column_exists.scalar())
 
-        op.drop_column(column_name='subtitles', table_name='table_episodes')
+    if episodes_subtitles_column_exists:
+        # we do a raw SQL query to avoid the need to modify the TableEpisodes model
+        try:
+            episodes = bind.exec_driver_sql('SELECT "sonarrEpisodeId", "sonarrSeriesId", "subtitles" '
+                                            'FROM table_episodes '
+                                            'WHERE table_episodes.subtitles IS NOT NULL '
+                                            'AND table_episodes.subtitles != \'[]\';')
+        except sa.exc.OperationalError:
+            pass
+        else:
+            for episode in episodes:
+                try:
+                    subtitles = ast.literal_eval(episode.subtitles)
+                except Exception:
+                    continue
+                else:
+                    for subtitle in subtitles:
+                        subtitle_language = parse_language(subtitle[0])
+                        bind.execute(sa.insert(TableEpisodesSubtitles).values(
+                            sonarrEpisodeId=episode.sonarrEpisodeId,
+                            sonarrSeriesId=episode.sonarrSeriesId,
+                            language=subtitle_language[0],
+                            hi=subtitle_language[1],
+                            forced=subtitle_language[2],
+                            path=subtitle[1],
+                            size=subtitle[2]
+                        ))
 
-    # we do a raw SQL query to avoid the need to modify the TableMovies model
-    try:
-        movies = bind.exec_driver_sql('SELECT "radarrId", "subtitles" '
-                                      'FROM table_movies '
-                                      'WHERE table_movies.subtitles IS NOT NULL '
-                                      'AND table_movies.subtitles != \'[]\';')
-    except sa.exc.OperationalError:
-        pass
+            op.drop_column(column_name='subtitles', table_name='table_episodes')
+
+    if bind.engine.name == 'postgresql':
+        movies_subtitles_column_exists = bind.exec_driver_sql('SELECT count(*) '
+                                                                'FROM information_schema.columns '
+                                                                'WHERE table_schema = \'public\' '
+                                                                'AND table_name=\'table_movies\' '
+                                                                'AND column_name=\'subtitles\';')
     else:
-        for movie in movies:
-            try:
-                subtitles = ast.literal_eval(movie.subtitles)
-            except Exception:
-                continue
-            else:
-                for subtitle in subtitles:
-                    subtitle_language = parse_language(subtitle[0])
-                    bind.execute(sa.insert(TableMoviesSubtitles).values(
-                        radarrId=movie.radarrId,
-                        language=subtitle_language[0],
-                        hi=subtitle_language[1],
-                        forced=subtitle_language[2],
-                        path=subtitle[1],
-                        size=subtitle[2]
-                    ))
+        movies_subtitles_column_exists = bind.exec_driver_sql('SELECT count(*) '
+                                                                'FROM pragma_table_info(\'table_movies\') '
+                                                                'WHERE name=\'subtitles\';')
+    movies_subtitles_column_exists = bool(movies_subtitles_column_exists.scalar())
 
-        op.drop_column(column_name='subtitles', table_name='table_movies')
+    if movies_subtitles_column_exists:
+        # we do a raw SQL query to avoid the need to modify the TableMovies model
+        try:
+            movies = bind.exec_driver_sql('SELECT "radarrId", "subtitles" '
+                                          'FROM table_movies '
+                                          'WHERE table_movies.subtitles IS NOT NULL '
+                                          'AND table_movies.subtitles != \'[]\';')
+        except sa.exc.OperationalError:
+            pass
+        else:
+            for movie in movies:
+                try:
+                    subtitles = ast.literal_eval(movie.subtitles)
+                except Exception:
+                    continue
+                else:
+                    for subtitle in subtitles:
+                        subtitle_language = parse_language(subtitle[0])
+                        bind.execute(sa.insert(TableMoviesSubtitles).values(
+                            radarrId=movie.radarrId,
+                            language=subtitle_language[0],
+                            hi=subtitle_language[1],
+                            forced=subtitle_language[2],
+                            path=subtitle[1],
+                            size=subtitle[2]
+                        ))
+
+            op.drop_column(column_name='subtitles', table_name='table_movies')
 
     """
     Create indexes for improved query performance based on analysis of:
