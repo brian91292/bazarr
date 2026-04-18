@@ -116,6 +116,11 @@ class LegendasNetProvider(ProviderRetryMixin, Provider):
         if response.status_code == 429:
             raise APIThrottled('Too many requests')
         elif response.status_code in (401, 403):
+            content_type = response.headers.get('Content-Type', '')
+            if 'application/json' not in content_type:
+                # Non-JSON response (e.g. Cloudflare anti-bot page); not a credentials issue
+                logger.warning('LegendasNet: login blocked by anti-bot protection (status %d)', response.status_code)
+                raise ProviderError('Login blocked by anti-bot protection')
             raise ConfigurationError('Invalid username or password')
         elif response.status_code != 200:
             response.raise_for_status()
@@ -130,6 +135,12 @@ class LegendasNetProvider(ProviderRetryMixin, Provider):
 
     def terminate(self):
         self.session.close()
+
+    def _refresh_session(self, request_func):
+        """Re-authenticate and retry the request once when the access token has expired."""
+        logger.info('LegendasNet: access token expired, re-authenticating')
+        self.login()  # Will raise ConfigurationError if credentials are actually invalid
+        return request_func()
 
     def server_url(self):
         return f'https://{self.server_hostname}/v1/'
@@ -169,12 +180,45 @@ class LegendasNetProvider(ProviderRetryMixin, Provider):
                 retry_timeout=retry_timeout
             )
 
+        if res.status_code in (401, 403):
+            # Token likely expired; re-authenticate and retry the search once
+            if isinstance(self.video, Episode):
+                res = self._refresh_session(
+                    lambda: self.session.get(self.server_url() + 'search/tv',
+                                             json={
+                                                 'name': video.series,
+                                                 'page': 1,
+                                                 'per_page': 25,
+                                                 'tv_episode': video.episode,
+                                                 'tv_season': video.season,
+                                                 'imdb_id': video.series_imdb_id
+                                             },
+                                             headers={'Content-Type': 'application/json'},
+                                             timeout=30)
+                )
+            else:
+                res = self._refresh_session(
+                    lambda: self.session.get(self.server_url() + 'search/movie',
+                                             json={
+                                                 'name': video.title,
+                                                 'page': 1,
+                                                 'per_page': 25,
+                                                 'imdb_id': video.imdb_id
+                                             },
+                                             headers={'Content-Type': 'application/json'},
+                                             timeout=30)
+                )
+
         if res.status_code == 404:
             logger.error(f"Endpoint not found: {res.url}")
             raise ProviderError("Endpoint not found")
         elif res.status_code == 429:
             raise APIThrottled("Too many requests")
         elif res.status_code in (401, 403):
+            content_type = res.headers.get('Content-Type', '')
+            if 'application/json' not in content_type:
+                logger.warning('LegendasNet: search blocked by anti-bot protection (status %d)', res.status_code)
+                raise ProviderError('Search blocked by anti-bot protection')
             raise ConfigurationError("Invalid access token")
         elif res.status_code != 200:
             res.raise_for_status()
@@ -249,9 +293,19 @@ class LegendasNetProvider(ProviderRetryMixin, Provider):
             retry_timeout=retry_timeout
         )
 
+        if r.status_code in (401, 403):
+            # Token likely expired; re-authenticate and retry the download once
+            r = self._refresh_session(
+                lambda: self.session.get(download_link, timeout=30)
+            )
+
         if r.status_code == 429:
             raise DownloadLimitExceeded("Daily download limit exceeded")
         elif r.status_code in (401, 403):
+            content_type = r.headers.get('Content-Type', '')
+            if 'application/json' not in content_type:
+                logger.warning('LegendasNet: download blocked by anti-bot protection (status %d)', r.status_code)
+                raise ProviderError('Download blocked by anti-bot protection')
             raise ConfigurationError("Invalid access token")
         elif r.status_code != 200:
             r.raise_for_status()
