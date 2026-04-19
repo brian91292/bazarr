@@ -92,6 +92,9 @@ def update_series(job_id=None):
 
         jobs_queue.update_job_progress(job_id=job_id, progress_max=series_count)
         for i, show in enumerate(series, start=1):
+            # Cooperative cancellation checkpoint: runs once per show so clicking
+            # Cancel stops the sync between shows rather than running to completion.
+            jobs_queue.check_cancelled(job_id)
             jobs_queue.update_job_progress(job_id=job_id, progress_value=i, progress_message=show['title'])
             if sync_monitored:
                 try:
@@ -164,6 +167,10 @@ def update_series(job_id=None):
         removed_series = list(set(current_shows_db) - set(current_shows_sonarr))
 
         for series in removed_series:
+            # Cooperative cancellation checkpoint for the removal phase too —
+            # otherwise a cancel could succeed in stopping the add/update loop
+            # but still churn through a long delete list.
+            jobs_queue.check_cancelled(job_id)
             # try to avoid unnecessary database calls
             if settings.general.debug:
                 series_title = database.execute(select(TableShows.title).where(TableShows.sonarrSeriesId == series)).first()[0]

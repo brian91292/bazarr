@@ -165,6 +165,7 @@ const NotificationDrawer: FunctionComponent<NotificationDrawerProps> = ({
                   "running",
                   "pending",
                   "failed",
+                  "cancelled",
                   "completed",
                   "unknown",
                 ];
@@ -339,7 +340,17 @@ const NotificationDrawer: FunctionComponent<NotificationDrawerProps> = ({
                                         </Tooltip>
                                       )}
                                       <Group gap={4} style={{ flexShrink: 0 }}>
-                                        {status === "pending" ? (
+                                        {status === "running" && (
+                                          <TimeAgo
+                                            key={`job-timestamp-${job?.job_id}`}
+                                            date={
+                                              job?.last_run_time || new Date()
+                                            }
+                                            minPeriod={5}
+                                          />
+                                        )}
+                                        {(status === "pending" ||
+                                          status === "running") && (
                                           <Menu
                                             position="bottom-end"
                                             withArrow
@@ -366,71 +377,84 @@ const NotificationDrawer: FunctionComponent<NotificationDrawerProps> = ({
                                               </ActionIcon>
                                             </Menu.Target>
                                             <Menu.Dropdown>
-                                              <Menu.Item
-                                                leftSection={
-                                                  <FontAwesomeIcon
-                                                    icon={faTurnUp}
-                                                  />
-                                                }
-                                                onClick={() =>
-                                                  handleMenuAction(
-                                                    job?.job_id || 0,
-                                                    () =>
-                                                      job?.job_id &&
-                                                      debouncedActionOnJobs({
-                                                        id: job.job_id,
-                                                        action: "move_top",
-                                                      }),
-                                                    `job-${job?.job_id}`,
-                                                  )
-                                                }
-                                              >
-                                                Move to top
-                                              </Menu.Item>
-                                              <Menu.Item
-                                                leftSection={
-                                                  <FontAwesomeIcon
-                                                    icon={faTurnDown}
-                                                  />
-                                                }
-                                                onClick={() =>
-                                                  handleMenuAction(
-                                                    job?.job_id || 0,
-                                                    () =>
-                                                      job?.job_id &&
-                                                      debouncedActionOnJobs({
-                                                        id: job.job_id,
-                                                        action: "move_bottom",
-                                                      }),
-                                                    `job-${job?.job_id}`,
-                                                  )
-                                                }
-                                              >
-                                                Move to bottom
-                                              </Menu.Item>
-                                              <Menu.Divider />
-                                              <Menu.Item
-                                                leftSection={
-                                                  <FontAwesomeIcon
-                                                    icon={faPlay}
-                                                  />
-                                                }
-                                                onClick={() =>
-                                                  handleMenuAction(
-                                                    job?.job_id || 0,
-                                                    () =>
-                                                      job?.job_id &&
-                                                      debouncedActionOnJobs({
-                                                        id: job.job_id,
-                                                        action: "force_start",
-                                                      }),
-                                                    `job-${job?.job_id}`,
-                                                  )
-                                                }
-                                              >
-                                                Force Start
-                                              </Menu.Item>
-                                              <Menu.Divider />
+                                              {status === "pending" && (
+                                                <>
+                                                  <Menu.Item
+                                                    leftSection={
+                                                      <FontAwesomeIcon
+                                                        icon={faTurnUp}
+                                                      />
+                                                    }
+                                                    onClick={() =>
+                                                      handleMenuAction(
+                                                        job?.job_id || 0,
+                                                        () =>
+                                                          job?.job_id &&
+                                                          debouncedActionOnJobs(
+                                                            {
+                                                              id: job.job_id,
+                                                              action:
+                                                                "move_top",
+                                                            },
+                                                          ),
+                                                        `job-${job?.job_id}`,
+                                                      )
+                                                    }
+                                                  >
+                                                    Move to top
+                                                  </Menu.Item>
+                                                  <Menu.Item
+                                                    leftSection={
+                                                      <FontAwesomeIcon
+                                                        icon={faTurnDown}
+                                                      />
+                                                    }
+                                                    onClick={() =>
+                                                      handleMenuAction(
+                                                        job?.job_id || 0,
+                                                        () =>
+                                                          job?.job_id &&
+                                                          debouncedActionOnJobs(
+                                                            {
+                                                              id: job.job_id,
+                                                              action:
+                                                                "move_bottom",
+                                                            },
+                                                          ),
+                                                        `job-${job?.job_id}`,
+                                                      )
+                                                    }
+                                                  >
+                                                    Move to bottom
+                                                  </Menu.Item>
+                                                  <Menu.Divider />
+                                                  <Menu.Item
+                                                    leftSection={
+                                                      <FontAwesomeIcon
+                                                        icon={faPlay}
+                                                      />
+                                                    }
+                                                    onClick={() =>
+                                                      handleMenuAction(
+                                                        job?.job_id || 0,
+                                                        () =>
+                                                          job?.job_id &&
+                                                          debouncedActionOnJobs(
+                                                            {
+                                                              id: job.job_id,
+                                                              action:
+                                                                "force_start",
+                                                            },
+                                                          ),
+                                                        `job-${job?.job_id}`,
+                                                      )
+                                                    }
+                                                  >
+                                                    Force Start
+                                                  </Menu.Item>
+                                                  <Menu.Divider />
+                                                </>
+                                              )}
                                               <Menu.Item
                                                 color="red"
                                                 leftSection={
@@ -451,19 +475,23 @@ const NotificationDrawer: FunctionComponent<NotificationDrawerProps> = ({
                                                 }
                                                 disabled={isCancelling}
                                               >
-                                                Cancel
+                                                {status === "running"
+                                                  ? "Cancel running job"
+                                                  : "Cancel"}
                                               </Menu.Item>
                                             </Menu.Dropdown>
                                           </Menu>
-                                        ) : (
-                                          <TimeAgo
-                                            key={`job-timestamp-${job?.job_id}`}
-                                            date={
-                                              job?.last_run_time || new Date()
-                                            }
-                                            minPeriod={5}
-                                          />
                                         )}
+                                        {status !== "pending" &&
+                                          status !== "running" && (
+                                            <TimeAgo
+                                              key={`job-timestamp-${job?.job_id}`}
+                                              date={
+                                                job?.last_run_time || new Date()
+                                              }
+                                              minPeriod={5}
+                                            />
+                                          )}
                                       </Group>
                                     </Group>
                                     {job?.progress_message && (

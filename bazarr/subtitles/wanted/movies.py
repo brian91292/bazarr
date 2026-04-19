@@ -120,6 +120,9 @@ def wanted_search_missing_subtitles_movies(job_id=None):
         jobs_queue.update_job_progress(job_id=job_id, progress_value='max')
 
     for i, movie in enumerate(movies, start=1):
+        # Cooperative cancellation checkpoint: checked once per movie so that
+        # cancelling mid-scan stops before firing another round of provider calls.
+        jobs_queue.check_cancelled(job_id)
         jobs_queue.update_job_progress(job_id=job_id, progress_value=i, progress_message=movie.title)
 
         providers = get_providers()

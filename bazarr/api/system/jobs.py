@@ -26,7 +26,7 @@ class SystemJobs(Resource):
     get_request_parser = reqparse.RequestParser()
     get_request_parser.add_argument('id', type=int, required=False, help='Job ID to return', default=None)
     get_request_parser.add_argument('status', type=str, required=False, help='Job status to return', default=None,
-                                    choices=['pending', 'running', 'failed', 'completed'])
+                                    choices=['pending', 'running', 'failed', 'completed', 'cancelled'])
 
     @authenticate
     @api_ns_system_jobs.doc(parser=get_request_parser)
@@ -64,7 +64,7 @@ class SystemJobs(Resource):
 
     patch_request_parser = reqparse.RequestParser()
     patch_request_parser.add_argument('queueName', type=str, required=True, help='Jobs queue name to empty',
-                                      choices=['pending', 'failed', 'completed'])
+                                      choices=['pending', 'failed', 'completed', 'cancelled'])
 
     @authenticate
     @api_ns_system_jobs.doc(parser=patch_request_parser)
@@ -82,19 +82,28 @@ class SystemJobs(Resource):
             return 'Jobs queue name not provided', 400
 
     delete_request_parser = reqparse.RequestParser()
-    delete_request_parser.add_argument('id', type=int, required=True, help='Job ID to delete from queue')
+    delete_request_parser.add_argument('id', type=int, required=True, help='Job ID to cancel / remove from the queue')
 
     @authenticate
     @api_ns_system_jobs.doc(parser=delete_request_parser)
     @api_ns_system_jobs.response(204, 'Success')
     @api_ns_system_jobs.response(400, 'Job ID not provided')
+    @api_ns_system_jobs.response(404, 'No active job found for given ID')
     @api_ns_system_jobs.response(401, 'Not Authenticated')
     def delete(self):
-        """Delete a job from the queue"""
+        """Cancel a job.
+
+        If the job is ``pending`` it is removed from the queue immediately. If it's
+        ``running`` a cooperative cancellation signal is sent; the job will stop
+        at its next cancellation checkpoint and be moved to the ``cancelled`` queue.
+        Jobs already in a terminal state (``completed``, ``failed``, ``cancelled``)
+        return 404.
+        """
         args = self.delete_request_parser.parse_args()
         job_id = args.get('id')
-        if job_id:
-            deleted = jobs_queue.remove_job_from_pending_queue(job_id=job_id)
-            if deleted:
-                return '', 204
-        return 'Job ID not provided', 400
+        if job_id is None:
+            return 'Job ID not provided', 400
+        cancelled = jobs_queue.cancel(job_id=job_id)
+        if cancelled:
+            return '', 204
+        return 'No active job found for given ID', 404

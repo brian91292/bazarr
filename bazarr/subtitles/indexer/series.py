@@ -298,6 +298,9 @@ def series_full_scan_subtitles(job_id=None, use_cache=None):
 
     jobs_queue.update_job_progress(job_id=job_id, progress_max=len(episodes), progress_message='Indexing')
     for i, episode in enumerate(episodes, start=1):
+        # Cooperative cancellation checkpoint — raised JobCancelled is caught by
+        # JobsQueue._run_job which routes the job to the 'cancelled' queue.
+        jobs_queue.check_cancelled(job_id)
         jobs_queue.update_job_progress(
             job_id=job_id, progress_value=i,
             progress_message=f"{episode.title} - S{episode.season:02d}E{episode.episode:02d} - {episode.episodeTitle}")

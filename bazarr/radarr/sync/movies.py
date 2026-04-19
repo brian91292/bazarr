@@ -162,6 +162,9 @@ def update_movies(job_id=None):
             movies_added = []
             movies_updated = []
             for i, movie in enumerate(movies, start=1):
+                # Cooperative cancellation checkpoint: runs once per movie so clicking
+                # Cancel stops the sync between movies rather than running to completion.
+                jobs_queue.check_cancelled(job_id)
                 jobs_queue.update_job_progress(job_id=job_id, progress_value=i, progress_message=movie['title'])
                 # Only movies that Radarr says have files downloaded will be kept up to date in the DB
                 if movie['hasFile'] is True:

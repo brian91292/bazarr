@@ -291,6 +291,9 @@ def movies_full_scan_subtitles(job_id=None, use_cache=None):
 
     jobs_queue.update_job_progress(job_id=job_id, progress_max=len(movies), progress_message='Indexing')
     for i, movie in enumerate(movies, start=1):
+        # Cooperative cancellation checkpoint — raised JobCancelled is caught by
+        # JobsQueue._run_job which routes the job to the 'cancelled' queue.
+        jobs_queue.check_cancelled(job_id)
         jobs_queue.update_job_progress(job_id=job_id, progress_value=i, progress_message=movie.title)
         store_subtitles_movie(movie.path, path_mappings.path_replace_movie(movie.path), use_cache=use_cache)
 

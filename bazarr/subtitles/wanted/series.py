@@ -132,6 +132,9 @@ def wanted_search_missing_subtitles_series(job_id=None):
         jobs_queue.update_job_progress(job_id=job_id, progress_value='max')
 
     for i, episode in enumerate(episodes, start=1):
+        # Cooperative cancellation checkpoint: checked once per episode so that
+        # cancelling mid-scan stops before firing another round of provider calls.
+        jobs_queue.check_cancelled(job_id)
         jobs_queue.update_job_progress(job_id=job_id, progress_value=i,
                                        progress_message=f'{episode.title} - S{episode.season:02d}E{episode.episode:02d}'
                                                         f' - {episode.episodeTitle}')
