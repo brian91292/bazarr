@@ -1,0 +1,93 @@
+name: Build and publish Docker image
+
+# Publishes the image to GitHub Container Registry so Dockge (and any other
+# plain "pull + up -d" stack manager) can consume it like any other image.
+#
+# After the first successful run, set your compose to:
+#
+#   services:
+#     bazarr:
+#       image: ghcr.io/brian91292/bazarr:latest
+#       # ...rest unchanged
+#
+# Dockge's "Update" button will pull + restart as normal.
+
+on:
+  push:
+    branches: [master]
+    # Rebuild whenever anything affecting the runtime image changes.
+    paths:
+      - "Dockerfile"
+      - "docker-entrypoint.sh"
+      - ".dockerignore"
+      - "requirements.txt"
+      - "postgres-requirements.txt"
+      - "bazarr.py"
+      - "bazarr/**"
+      - "custom_libs/**"
+      - "libs/**"
+      - "migrations/**"
+      - "frontend/**"
+      - ".github/workflows/docker-publish.yml"
+  workflow_dispatch:   # lets you trigger a build manually from the Actions tab
+
+# Cancel superseded runs so a rapid sequence of pushes doesn't queue up builds.
+concurrency:
+  group: docker-publish-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}   # resolves to brian91292/bazarr
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write         # required to push to GHCR under the fork's namespace
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      # Multi-arch support via QEMU — costs ~1 extra min for arm64 emulation,
+      # worth it so the same image works on x86 servers and ARM SBCs.
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Generate image tags + OCI labels from git metadata. This produces
+      # `:latest` on master plus a `:sha-<shortsha>` tag for rollback.
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix=sha-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # GitHub Actions cache keeps re-build time low — only changed layers
+          # are re-built, unchanged ones come from the previous run.
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
