@@ -1222,14 +1222,31 @@ def save_subtitles(file_path, subtitles, single=False, directory=None, chmod=Non
         subtitle_path = get_subtitle_path(file_path, None if single else subtitle.language,
                                           forced_tag=subtitle.language.forced,
                                           hi_tag=False if must_remove_hi else subtitle.language.hi, tags=tags)
+        # When remove_HI is active we also want to wipe out any existing .hi.
+        # sibling from a previous download — otherwise the UI keeps showing the
+        # stale HI file next to the freshly-stripped one. Compute that sibling
+        # path with the SAME inputs so directory/path_decoder transforms apply
+        # to both.
+        hi_sibling_path = (
+            get_subtitle_path(file_path, None if single else subtitle.language,
+                              forced_tag=subtitle.language.forced,
+                              hi_tag=True, tags=tags)
+            if must_remove_hi else None
+        )
         if directory is not None:
             subtitle_path = os.path.join(directory, os.path.split(subtitle_path)[1])
+            if hi_sibling_path is not None:
+                hi_sibling_path = os.path.join(directory, os.path.split(hi_sibling_path)[1])
 
         if path_decoder:
             subtitle_path = path_decoder(subtitle_path)
+            if hi_sibling_path is not None:
+                hi_sibling_path = path_decoder(hi_sibling_path)
 
         # force unicode
         subtitle_path = UnicodeDammit(subtitle_path).unicode_markup
+        if hi_sibling_path is not None:
+            hi_sibling_path = UnicodeDammit(hi_sibling_path).unicode_markup
 
         subtitle.storage_path = subtitle_path
 
@@ -1246,6 +1263,24 @@ def save_subtitles(file_path, subtitles, single=False, directory=None, chmod=Non
                 with open(subtitle_path, 'wb') as f:
                     f.write(content)
                 subtitle.storage_path = subtitle_path
+
+                # Post-save cleanup of the stale .hi. sibling (same format). Only
+                # runs when we actually produced a stripped replacement, so a
+                # failed save never orphans the user's existing HI file.
+                if hi_sibling_path is not None:
+                    per_format_hi_sibling = (hi_sibling_path if format == "srt"
+                                             else os.path.splitext(hi_sibling_path)[0] + (u".%s" % format))
+                    # Guard against the degenerate case where the tag swap produced the same
+                    # path (shouldn't happen, but avoids deleting what we just wrote).
+                    if (per_format_hi_sibling != subtitle_path
+                            and os.path.exists(per_format_hi_sibling)):
+                        try:
+                            os.remove(per_format_hi_sibling)
+                            logger.debug(u"Removed stale HI sibling after remove_HI: %s",
+                                         per_format_hi_sibling)
+                        except OSError as remove_err:
+                            logger.warning(u"Could not remove stale HI sibling %s: %s",
+                                           per_format_hi_sibling, remove_err)
             else:
                 logger.error(u"Something went wrong when getting modified subtitle for %s", subtitle)
 

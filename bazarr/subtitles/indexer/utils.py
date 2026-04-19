@@ -135,7 +135,11 @@ def guess_external_subtitles(dest_folder, subtitles, media_type, previously_inde
                     continue
                 text = text.decode(encoding)
 
-                if os.path.splitext(subtitle_path)[1] == 'srt':
+                # os.path.splitext returns the extension WITH a leading dot ("srt" →
+                # ".srt"), so the old "== 'srt'" comparison was always False and this
+                # content-based HI detection silently never ran. Compare against the
+                # dotted form so externally-indexed SRT files are actually scanned.
+                if os.path.splitext(subtitle_path)[1].lower() == '.srt':
                     if core.parse_for_hi_regex(subtitle_text=text,
                                                alpha3_language=language.alpha3 if hasattr(language, 'alpha3') else
                                                None):
