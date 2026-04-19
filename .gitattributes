@@ -1,3 +1,12 @@
 static/jquery/* linguist-vendored
 static/semantic/* linguist-vendored
 *.tpl linguist-language=Python
+
+# Force LF line endings on files that break if Windows introduces CRLF.
+# Shell scripts with \r in the shebang fail with "/bin/sh^M: not found" at
+# container start — this repo hit that in commit 7d96c0ac for the dev-setup
+# entrypoints. Same hazard applies to the production Dockerfile + entrypoint.
+*.sh text eol=lf
+Dockerfile text eol=lf
+docker-entrypoint.sh text eol=lf
+.dockerignore text eol=lf

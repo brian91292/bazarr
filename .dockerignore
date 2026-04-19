@@ -1,0 +1,52 @@
+# Keep the build context small. Every file listed here is NOT sent to the
+# Docker daemon, which matters for `build: https://github.com/...git` because
+# Compose clones the repo into a temp dir and streams it as the context.
+
+# Version control + GitHub metadata
+.git
+.github
+.gitignore
+.gitattributes
+
+# Dev stack's runtime data — on a dev checkout this contains the SQLite DB,
+# full log history, subtitle cache, etc. Often hundreds of MB and has no
+# business in a production image.
+dev-setup/data
+
+# Secrets. Belt-and-suspenders with .gitignore.
+.env
+**/.env
+!.env.example
+!frontend/.env.development
+
+# Python build artifacts
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+.venv
+venv
+
+# Node — the frontend is built inside stage 1, we don't want any host-built
+# artifacts leaking in.
+frontend/node_modules
+frontend/build
+frontend/dist
+frontend/.vite
+
+# IDE / editor noise
+.vscode
+.idea
+*.swp
+*.swo
+.DS_Store
+
+# Tests aren't needed at runtime
+tests
+
+# Documentation — also not needed at runtime
+*.md
+docs
