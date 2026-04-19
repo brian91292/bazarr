@@ -28,6 +28,11 @@ services:
       
       # Mount data directory for persistence
       - ./data:/app/bazarr/data
+
+      # TrueNAS SMB share — see named volume definition at bottom of file.
+      # Mounted at /mnt/media to match the path Sonarr/Radarr report, so
+      # Bazarr's path-mapping settings can stay empty.
+      - media:/mnt/media
     environment:
       - SZ_USER_AGENT=bazarr-dev
       - BAZARR_VERSION=dev
@@ -122,3 +127,15 @@ networks:
 volumes:
   bazarr-dev-data:
     driver: local
+
+  # TrueNAS SMB/CIFS share mounted directly by Docker.
+  # Replace TRUENAS_IP, SMB_USER, and set SMB_PASSWORD in a .env file next to
+  # this compose file (SMB_PASSWORD=yourpassword). uid=0/gid=0 because the dev
+  # backend image runs as root — do NOT change these unless you also change
+  # the container's user.
+  media:
+    driver: local
+    driver_opts:
+      type: cifs
+      device: "//192.168.1.147/Media"
+      o: "username=brian,password=${SMB_PASSWORD},vers=3.0,uid=0,gid=0,file_mode=0664,dir_mode=0775"
