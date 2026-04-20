@@ -18,7 +18,11 @@
 # -----------------------------------------------------------------------------
 # Stage 1: build the frontend
 # -----------------------------------------------------------------------------
-FROM node:20-alpine AS frontend-builder
+# --platform=$BUILDPLATFORM pins this stage to the runner's native architecture
+# (amd64 on GitHub Actions) instead of the target architecture. The Vite output
+# is static JS/CSS — architecture-independent — so building it under QEMU for
+# arm64 is pure waste. Native build is ~3 min; emulated can stall for hours.
+FROM --platform=$BUILDPLATFORM node:20-alpine AS frontend-builder
 
 WORKDIR /build
 
